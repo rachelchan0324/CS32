@@ -5,16 +5,19 @@ class City;
 
 class Game
 {
-  public:
+    public:
         // Constructor/destructor
-    Game(int rows, int cols, int nTooters);
-    ~Game();
+        Game(int rows, int cols, int nTooters);
+        ~Game();
 
         // Mutators
-    void play();
-
-  private:
-    City* m_city;
+        void play();
+    
+    private:
+        City* m_city;
+    
+        // Helper method
+        int decodeDirection(char dir);
 };
 
 #endif

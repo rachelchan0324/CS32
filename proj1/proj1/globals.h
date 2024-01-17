@@ -20,7 +20,6 @@ const int NUMDIRS = 4;
 // Utility functions
 ///////////////////////////////////////////////////////////////////////////
 
-int decodeDirection(char dir);
 int randInt(int min, int max);
 void clearScreen();
 

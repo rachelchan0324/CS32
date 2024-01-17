@@ -1,5 +1,7 @@
 #include "Tooter.h"
 #include "City.h"
+#include "globals.h"
+
 #include <iostream>
 
 using namespace std;
@@ -36,8 +38,8 @@ int Tooter::col() const
 
 void Tooter::move()
 {
-      // Attempt to move in a random direction; if it can't move, don't move.
-      // If player is there, don't move.
+    // Attempt to move in a random direction; if it can't move, don't move.
+    // If player is there, don't move.
     int dir = randInt(0, NUMDIRS-1);  // dir is now UP, DOWN, LEFT, or RIGHT
     int r = m_row;
     int c = m_col;

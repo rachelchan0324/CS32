@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Player.h"
 #include "City.h"
+#include "globals.h"
+
 #include <iostream>
 
 using namespace std;
@@ -28,20 +30,20 @@ Game::Game(int rows, int cols, int nTooters)
         exit(1);
     }
 
-        // Create city
+    // Create city
     m_city = new City(rows, cols);
 
-        // Add a player
+    // Add a player
     int rPlayer = randInt(1, rows);
     int cPlayer = randInt(1, cols);
     m_city->addPlayer(rPlayer, cPlayer);
 
-      // Populate with Tooters
+    // Populate with Tooters
     while (nTooters > 0)
     {
         int r = randInt(1, rows);
         int c = randInt(1, cols);
-          // Don't put a Tooter where the player is
+        // Don't put a Tooter where the player is
         if (r == rPlayer  &&  c == cPlayer)
             continue;
         m_city->addTooter(r, c);
@@ -66,8 +68,18 @@ void Game::play()
         cout << "Move (u/d/l/r/h/q): ";
         string action;
         getline(cin,action);
-        if (action.size() == 0)  // player preaches
+        if(action.size() == 0)  // player preaches
+        {
             p->preach();
+            m_city->display();
+            m_city->moveTooters();
+        }
+        else if (action[0] == 'h')  // display history
+        {
+            m_city->history().display();
+            cout << "Press enter to continue.";
+            cin.ignore(10000,'\n');
+        }
         else
         {
             switch (action[0])
@@ -83,18 +95,26 @@ void Game::play()
                 case 'r':
                     p->move(decodeDirection(action[0]));
                     break;
-                case 'h':
-                    History& p = m_city->history();
-                    p.display();
-                    cout << "Press enter to continue.";
-                    cin.ignore(10000,'\n');
             }
+            m_city->display();
+            m_city->moveTooters();
         }
-        m_city->moveTooters();
-        m_city->display();
     }
     if (p->isPassedOut())
         cout << "You lose." << endl;
     else
         cout << "You win." << endl;
 }
+
+int decodeDirection(char dir)
+{
+    switch (dir)
+    {
+        case 'u':  return UP;
+        case 'd':  return DOWN;
+        case 'l':  return LEFT;
+        case 'r':  return RIGHT;
+    }
+    return -1;  // bad argument passed in!
+}
+

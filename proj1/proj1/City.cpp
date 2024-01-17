@@ -1,6 +1,7 @@
 #include "City.h"
 #include "Tooter.h"
 #include "Player.h"
+#include "globals.h"
 
 #include <iostream>
 
@@ -11,12 +12,12 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////
 
 City::City(int nRows, int nCols)
-: m_rows(nRows), m_cols(nCols), m_player(nullptr), m_nTooters(0), h_grid(nRows, nCols)
+: m_rows(nRows), m_cols(nCols), m_player(nullptr), m_nTooters(0), m_history(nRows, nCols)
 {
     if(nRows <= 0  ||  nCols <= 0  ||  nRows > MAXROWS  ||  nCols > MAXCOLS)
     {
         cout << "***** City created with invalid size " << nRows << " by "
-             << nCols << "!" << endl;
+        << nCols << "!" << endl;
         exit(1);
     }
 }
@@ -46,7 +47,7 @@ Player* City::player() const
 bool City::isPlayerAt(int r, int c) const
 {
     return m_player != nullptr  &&
-           m_player->row() == r  &&  m_player->col() == c;
+    m_player->row() == r  &&  m_player->col() == c;
 }
 
 int City::tooterCount() const
@@ -70,11 +71,11 @@ bool City::determineNewPosition(int& r, int& c, int dir) const
 {
     switch (dir)
     {
-      case UP:     if (r <= 1)      return false; else r--; break;
-      case DOWN:   if (r >= rows()) return false; else r++; break;
-      case LEFT:   if (c <= 1)      return false; else c--; break;
-      case RIGHT:  if (c >= cols()) return false; else c++; break;
-      default:     return false;
+        case UP:     if (r <= 1)      return false; else r--; break;
+        case DOWN:   if (r >= rows()) return false; else r++; break;
+        case LEFT:   if (c <= 1)      return false; else c--; break;
+        case RIGHT:  if (c >= cols()) return false; else c++; break;
+        default:     return false;
     }
     return true;
 }
@@ -90,7 +91,7 @@ void City::display() const
     for (r = 0; r < rows(); r++)
         for (c = 0; c < cols(); c++)
             grid[r][c] = '.';
-
+    
     // Indicate each Tooter's position
     for (int k = 0; k < m_nTooters; k++)
     {
@@ -98,26 +99,26 @@ void City::display() const
         char& gridChar = grid[tp->row()-1][tp->col()-1];
         switch (gridChar)
         {
-          case '.':  gridChar = 'T'; break;
-          case 'T':  gridChar = '2'; break;
-          case '9':  break;
-          default:   gridChar++; break;  // '2' through '8'
+            case '.':  gridChar = 'T'; break;
+            case 'T':  gridChar = '2'; break;
+            case '9':  break;
+            default:   gridChar++; break;  // '2' through '8'
         }
     }
-
-        // Indicate player's position
+    
+    // Indicate player's position
     if (m_player != nullptr)
     {
-          // Set the char to '@', unless there's also a Tooter there
-          // (which should never happen), in which case set it to '*'.
+        // Set the char to '@', unless there's also a Tooter there
+        // (which should never happen), in which case set it to '*'.
         char& gridChar = grid[m_player->row()-1][m_player->col()-1];
         if (gridChar == '.')
             gridChar = '@';
         else
             gridChar = '*';
     }
-
-        // Draw the grid
+    
+    // Draw the grid
     clearScreen();
     for (r = 0; r < rows(); r++)
     {
@@ -126,8 +127,8 @@ void City::display() const
         cout << endl;
     }
     cout << endl;
-
-        // Write message, Tooter, and player info
+    
+    // Write message, Tooter, and player info
     cout << "There are " << m_nTooters << " unconverted Tooters remaining." << endl;
     if (m_player == nullptr)
         cout << "There is no player." << endl;
@@ -146,12 +147,12 @@ bool City::addTooter(int r, int c)
 {
     if ( ! isInBounds(r, c))
         return false;
-
-      // Don't add a Tooter on a spot with a player
+    
+    // Don't add a Tooter on a spot with a player
     if (m_player != nullptr  &&  m_player->row() == r  &&  m_player->col() == c)
         return false;
-
-      // Dynamically allocate a new Tooter and add it to the city
+    
+    // Dynamically allocate a new Tooter and add it to the city
     if (m_nTooters == MAXTOOTERS)
         return false;
     m_tooters[m_nTooters] = new Tooter(this, r, c);
@@ -163,36 +164,36 @@ bool City::addPlayer(int r, int c)
 {
     if ( ! isInBounds(r, c))
         return false;
-
-      // Don't add a player if one already exists
+    
+    // Don't add a player if one already exists
     if (m_player != nullptr)
         return false;
-
-      // Don't add a player on a spot with a Tooter
+    
+    // Don't add a player on a spot with a Tooter
     if (nTootersAt(r, c) > 0)
         return false;
-
-      // Dynamically allocate new Player and add it to the city
+    
+    // Dynamically allocate new Player and add it to the city
     m_player = new Player(this, r, c);
     return true;
 }
 
 void City::preachToTootersAroundPlayer()
 {
-      // Preach to Tooters orthogonally or diagonally adjacent to player.  If a
-      // Tooter is converted, then since the order of the Tooters in the array
-      // doesn't matter, we can replace the converted Tooter we remove from the
-      // game by the last one in the array.
+    // Preach to Tooters orthogonally or diagonally adjacent to player.  If a
+    // Tooter is converted, then since the order of the Tooters in the array
+    // doesn't matter, we can replace the converted Tooter we remove from the
+    // game by the last one in the array.
     if (m_player == nullptr)
         return;
-
+    
     for (int k = 0; k < m_nTooters; )
     {
         Tooter* tp = m_tooters[k];
         int rowdiff = tp->row() - m_player->row();
         int coldiff = tp->col() - m_player->col();
-
-          // if orthogonally or diagonally adjacent and conversion succeeds
+        
+        // if orthogonally or diagonally adjacent and conversion succeeds
         if (rowdiff >= -1  &&  rowdiff <= 1  && coldiff >= -1  &&  coldiff <= 1  && randInt(1, 3) <= 2)
             // 2/3 probability
         {
@@ -200,8 +201,9 @@ void City::preachToTootersAroundPlayer()
             m_tooters[k] = m_tooters[m_nTooters-1];
             m_nTooters--;
         }
-        else if(rowdiff >= -1  &&  rowdiff <= 1  && coldiff >= -1  &&  coldiff <= 1){
-            h_grid.record(tp -> row(), tp -> col());
+        else if(rowdiff >= -1  &&  rowdiff <= 1  && coldiff >= -1  &&  coldiff <= 1)
+        {
+            m_history.record(tp -> row(), tp -> col());
             k++;
         }
         else
@@ -219,7 +221,7 @@ void City::moveTooters()
             continue;
         int rowdiff = tp->row() - m_player->row();
         int coldiff = tp->col() - m_player->col();
-          // if orthogonally adjacent
+        // if orthogonally adjacent
         if  ((rowdiff == 0  &&  (coldiff == 1  ||  coldiff == -1))  ||
              (coldiff == 0  &&  (rowdiff == 1  ||  rowdiff == -1)) )
             m_player->getGassed();
@@ -232,6 +234,6 @@ bool City::isInBounds(int r, int c) const
 }
 
 History& City::history(){
-    return h_grid;
+    return m_history;
 }
 

@@ -5,21 +5,21 @@ class City;
 
 class Tooter
 {
-  public:
+    public:
         // Constructor
-    Tooter(City* cp, int r, int c);
+        Tooter(City* cp, int r, int c);
 
         // Accessors
-    int  row() const;
-    int  col() const;
+        int  row() const;
+        int  col() const;
 
         // Mutators
-    void move();
+        void move();
 
-  private:
-    City* m_city;
-    int   m_row;
-    int   m_col;
+    private:
+        City* m_city;
+        int   m_row;
+        int   m_col;
 };
 
 #endif

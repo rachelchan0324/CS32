@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "City.h"
+#include "globals.h"
+
 #include <iostream>
 
 using namespace std;
@@ -9,7 +11,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////
 
 Player::Player(City* cp, int r, int c)
- : m_city(cp), m_row(r), m_col(c), m_health(INITIAL_PLAYER_HEALTH), m_age(0)
+: m_city(cp), m_row(r), m_col(c), m_health(INITIAL_PLAYER_HEALTH), m_age(0)
 {
     if (cp == nullptr)
     {
