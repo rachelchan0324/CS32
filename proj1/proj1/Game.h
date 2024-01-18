@@ -15,9 +15,6 @@ class Game
     
     private:
         City* m_city;
-    
-        // Helper method
-        int decodeDirection(char dir);
 };
 
 #endif

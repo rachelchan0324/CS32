@@ -11,6 +11,18 @@ using namespace std;
 //  Game implementations
 ///////////////////////////////////////////////////////////////////////////
 
+int decodeDirection(char dir)
+{
+    switch (dir)
+    {
+        case 'u':  return UP;
+        case 'd':  return DOWN;
+        case 'l':  return LEFT;
+        case 'r':  return RIGHT;
+    }
+    return -1;  // bad argument passed in!
+}
+
 Game::Game(int rows, int cols, int nTooters)
 {
     if (nTooters < 0)
@@ -96,8 +108,8 @@ void Game::play()
                     p->move(decodeDirection(action[0]));
                     break;
             }
-            m_city->display();
             m_city->moveTooters();
+            m_city->display();
         }
     }
     if (p->isPassedOut())
@@ -105,16 +117,3 @@ void Game::play()
     else
         cout << "You win." << endl;
 }
-
-int decodeDirection(char dir)
-{
-    switch (dir)
-    {
-        case 'u':  return UP;
-        case 'd':  return DOWN;
-        case 'l':  return LEFT;
-        case 'r':  return RIGHT;
-    }
-    return -1;  // bad argument passed in!
-}
-
