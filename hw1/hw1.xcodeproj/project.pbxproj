@@ -13,6 +13,8 @@
 		CCB5167B2B5CB94A00E4DCC5 /* GamerMap.h in Sources */ = {isa = PBXBuildFile; fileRef = CCB5167A2B5CB94A00E4DCC5 /* GamerMap.h */; };
 		CCB5167D2B5CB9A900E4DCC5 /* GamerMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCB5167C2B5CB9A900E4DCC5 /* GamerMap.cpp */; };
 		CCB5167F2B5CBAD600E4DCC5 /* testGamerMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCB5167E2B5CBAD600E4DCC5 /* testGamerMap.cpp */; };
+		CCB516822B5D07CE00E4DCC5 /* newMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCB516802B5D07CE00E4DCC5 /* newMap.cpp */; };
+		CCB516842B5D080D00E4DCC5 /* testnewMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCB516832B5D080D00E4DCC5 /* testnewMap.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +37,9 @@
 		CCB5167A2B5CB94A00E4DCC5 /* GamerMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GamerMap.h; sourceTree = "<group>"; };
 		CCB5167C2B5CB9A900E4DCC5 /* GamerMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GamerMap.cpp; sourceTree = "<group>"; };
 		CCB5167E2B5CBAD600E4DCC5 /* testGamerMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testGamerMap.cpp; sourceTree = "<group>"; };
+		CCB516802B5D07CE00E4DCC5 /* newMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = newMap.cpp; sourceTree = "<group>"; };
+		CCB516812B5D07CE00E4DCC5 /* newMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = newMap.h; sourceTree = "<group>"; };
+		CCB516832B5D080D00E4DCC5 /* testnewMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testnewMap.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +78,9 @@
 				CCB5167A2B5CB94A00E4DCC5 /* GamerMap.h */,
 				CCB5167C2B5CB9A900E4DCC5 /* GamerMap.cpp */,
 				CCB5167E2B5CBAD600E4DCC5 /* testGamerMap.cpp */,
+				CCB516812B5D07CE00E4DCC5 /* newMap.h */,
+				CCB516802B5D07CE00E4DCC5 /* newMap.cpp */,
+				CCB516832B5D080D00E4DCC5 /* testnewMap.cpp */,
 			);
 			path = hw1;
 			sourceTree = "<group>";
@@ -136,10 +144,12 @@
 			files = (
 				CCB516772B5C8F7200E4DCC5 /* Map.cpp in Sources */,
 				CCB5166F2B5C8C2100E4DCC5 /* Map.h in Sources */,
+				CCB516822B5D07CE00E4DCC5 /* newMap.cpp in Sources */,
 				CCB5167D2B5CB9A900E4DCC5 /* GamerMap.cpp in Sources */,
 				CCB5167F2B5CBAD600E4DCC5 /* testGamerMap.cpp in Sources */,
 				CCB516792B5C970F00E4DCC5 /* testMap.cpp in Sources */,
 				CCB5167B2B5CB94A00E4DCC5 /* GamerMap.h in Sources */,
+				CCB516842B5D080D00E4DCC5 /* testnewMap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

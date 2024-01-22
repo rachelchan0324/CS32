@@ -1,10 +1,18 @@
-#include "Map.h"
+#include "newMap.h"
 #include <iostream>
 
 using namespace std;
 
 Map::Map() {
     m_size = 0;
+    m_capacity = DEFAULT_MAX_ITEMS;
+    m_pairs = new PairType [DEFAULT_MAX_ITEMS];
+}
+
+Map::Map(int capacity){
+    m_size = 0;
+    m_capacity = capacity;
+    m_pairs = new PairType [capacity];
 }
 
 bool Map::empty() const{
@@ -23,7 +31,7 @@ bool Map::insert(const KeyType& key, const ValueType& value) {
     // Otherwise, make no change to the map and return false (indicating
     // that either the key is already in the map, or the map has a fixed
     // capacity and is full).
-    if(contains(key) || m_size >= DEFAULT_MAX_ITEMS)
+    if(contains(key) || m_size >= m_capacity)
         return false;
     m_pairs[m_size].key = key;
     m_pairs[m_size].value = value;
@@ -76,8 +84,8 @@ bool Map::erase(const KeyType& key) {
 bool Map::contains(const KeyType& key) const {
     // Return true if key is equal to a key currently in the map, otherwise
     // false.
-    for(int i = 0; i < m_size; i++) {
-        if(key == m_pairs[i].key)
+    for(int i = 0; i < m_size; i++){
+        if(m_pairs[i].key == key)
             return true;
     }
     return false;
@@ -135,4 +143,30 @@ void Map::dump() const {
         cerr << i << ": " << m_pairs[i].key << ", " << m_pairs[i].value << endl;
     }
 }
+
+Map& Map::operator= (const Map& other){
+    delete [] m_pairs;
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+    m_pairs = new PairType [other.m_capacity];
+    for(int i = 0; i < other.m_size; i++){
+        m_pairs[i] = other.m_pairs[i];
+    }
+    return *this;
+}
+
+Map::Map(const Map& other){
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+    m_pairs = new PairType [other.m_capacity];
+    for(int i = 0; i < other.m_size; i++){
+       m_pairs[i] = other.m_pairs[i];
+    }
+}
+
+Map::~Map(){
+    // destructor
+    delete [] m_pairs;
+}
+
 

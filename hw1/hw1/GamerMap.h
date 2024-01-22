@@ -1,7 +1,7 @@
 #ifndef GAMER_MAP_H
 #define GAMER_MAP_H
 
-#include "Map.h"
+#include "newMap.h"
 
 class GamerMap {
     public:
@@ -13,7 +13,6 @@ class GamerMap {
         void print() const;
 
     private:
-        int m_size;
         Map m_gamerMap;
 };
 

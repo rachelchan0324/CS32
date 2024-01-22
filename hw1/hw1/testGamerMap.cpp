@@ -5,6 +5,13 @@
 using namespace std;
 
 int main () {
+    GamerMap fam;
+    assert(fam.addGamer("Mom"));
+    assert(fam.addGamer("Dad"));
+    assert(fam.play("Mom", 23));
+    assert(0 == fam.hoursSpent("Dad"));
+    assert(23 == fam.hoursSpent("Mom"));
+    
     GamerMap friends;
     assert(friends.numGamers() == 0);
     assert(friends.addGamer("Brandon"));
@@ -15,6 +22,6 @@ int main () {
     assert(friends.play("Katie", 7.6));
     assert(11.6 == friends.hoursSpent("Katie"));
     assert(0 == friends.hoursSpent("Brandon"));
-    friends.print();
+    
     cout << "Passed all tests" << endl;
 }
