@@ -52,9 +52,9 @@ int main() {
     gpas.erase("Fred");
     assert(gpas.size() == 3  &&  gpas.contains("Lucy")  &&  gpas.contains("Ethel")  &&
            gpas.contains(""));
-    string k;
-    double v;
-    assert(gpas.get(1, k, v)  &&  k == "Ethel");
-    assert(gpas.get(0, k, v)  &&  k == "");
+    string k1;
+    double v1;
+    assert(gpas.get(1, k1, v1)  &&  k1 == "Ethel");
+    assert(gpas.get(0, k1, v1)  &&  k1 == "");
 }
 
