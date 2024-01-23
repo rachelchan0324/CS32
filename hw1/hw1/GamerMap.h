@@ -1,7 +1,7 @@
 #ifndef GAMER_MAP_H
 #define GAMER_MAP_H
 
-#include "newMap.h"
+#include "Map.h"
 
 class GamerMap {
     public:

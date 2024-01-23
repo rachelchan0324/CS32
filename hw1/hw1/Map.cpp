@@ -120,11 +120,17 @@ bool Map::get(int i, KeyType& key, ValueType& value) const {
 }
 
 void Map::swap(Map& other) {
-    // Exchange the contents of this map with the other one.
-    // MARK: is this do-able?
-    Map temp = *this;
-    *this = other;
-    other = temp;
+    // swapping the size
+    int tempSize = other.m_size;
+    other.m_size = m_size;
+    m_size = tempSize;
+    
+    // swapping the structs inside the map array
+    for(int i = 0; i < DEFAULT_MAX_ITEMS; i++){
+        PairType temp = m_pairs[i];
+        m_pairs[i] = other.m_pairs[i];
+        other.m_pairs[i] = temp;
+    }
 }
 
 void Map::dump() const {

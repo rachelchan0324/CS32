@@ -1,5 +1,5 @@
 #include "GamerMap.h"
-#include "newMap.h"
+#include "Map.h"
 
 #include <iostream>
 
@@ -21,7 +21,7 @@ double GamerMap::hoursSpent(std::string name) const {
     // If a person with the specified name is in the map, return how
     // many hours they have spent gaming; otherwise, return -1.
     double hrsSpent;
-    if(m_gamerMap.get(name, hrsSpent)
+    if(m_gamerMap.get(name, hrsSpent))
         return hrsSpent;
     return -1;
 }
@@ -33,7 +33,7 @@ bool GamerMap::play(std::string name, double hours) {
     // the indicated person has spent gaming and return true.
         
     double currHours;
-    if(hours < 0 || !m.get(name, currHours))
+    if(hours < 0 || ! m_gamerMap.get(name, currHours))
         return false;
     m_gamerMap.update(name, currHours + hours);
     return true;

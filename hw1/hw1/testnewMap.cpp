@@ -20,5 +20,4 @@ int main() {
     // as well:
     a.swap(b);
     assert(!a.insert(k[5], v)  &&  b.insert(k[5], v));
-
 }

@@ -129,10 +129,21 @@ bool Map::get(int i, KeyType& key, ValueType& value) const {
 
 void Map::swap(Map& other) {
     // Exchange the contents of this map with the other one.
-    // MARK: is this do-able?
-    Map temp = *this;
-    *this = other;
-    other = temp;
+    
+    // swap the sizes
+    int tempSize = m_size;
+    m_size = other.m_size;
+    other.m_size = tempSize;
+    
+    // swap the capacity
+    int tempCapacity = m_capacity;
+    m_capacity = other.m_capacity;
+    other.m_capacity = tempCapacity;
+    
+    // swap the pointers to the array
+    PairType* temp = m_pairs;
+    m_pairs = other.m_pairs;
+    other.m_pairs = temp;
 }
 
 void Map::dump() const {
@@ -145,12 +156,14 @@ void Map::dump() const {
 }
 
 Map& Map::operator= (const Map& other){
-    delete [] m_pairs;
-    m_size = other.m_size;
-    m_capacity = other.m_capacity;
-    m_pairs = new PairType [other.m_capacity];
-    for(int i = 0; i < other.m_size; i++){
-        m_pairs[i] = other.m_pairs[i];
+    if(&other != this){
+        delete [] m_pairs;
+        m_size = other.m_size;
+        m_capacity = other.m_capacity;
+        m_pairs = new PairType [other.m_capacity];
+        for(int i = 0; i < other.m_size; i++){
+            m_pairs[i] = other.m_pairs[i];
+        }
     }
     return *this;
 }
