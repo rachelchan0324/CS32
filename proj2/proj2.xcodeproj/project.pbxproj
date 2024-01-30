@@ -6,11 +6,6 @@
 	objectVersion = 56;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		CC0602C52B60FA5D0048515E /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC0602C42B60FA5D0048515E /* Map.cpp */; };
-		CC0602CD2B62CBF80048515E /* MapTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC0602CC2B62CBF80048515E /* MapTester.cpp */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		CC0602BF2B60FA5D0048515E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -25,9 +20,7 @@
 
 /* Begin PBXFileReference section */
 		CC0602C12B60FA5D0048515E /* proj2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proj2; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC0602C42B60FA5D0048515E /* Map.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
-		CC0602CB2B60FB8E0048515E /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
-		CC0602CC2B62CBF80048515E /* MapTester.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MapTester.cpp; sourceTree = "<group>"; };
+		CC0602D82B69728B0048515E /* proj2 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = proj2; path = ../../../.Trash/proj2; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +37,7 @@
 		CC0602B82B60FA5D0048515E = {
 			isa = PBXGroup;
 			children = (
-				CC0602C32B60FA5D0048515E /* proj2 */,
+				CC0602D82B69728B0048515E /* proj2 */,
 				CC0602C22B60FA5D0048515E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,16 +48,6 @@
 				CC0602C12B60FA5D0048515E /* proj2 */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CC0602C32B60FA5D0048515E /* proj2 */ = {
-			isa = PBXGroup;
-			children = (
-				CC0602CB2B60FB8E0048515E /* Map.h */,
-				CC0602C42B60FA5D0048515E /* Map.cpp */,
-				CC0602CC2B62CBF80048515E /* MapTester.cpp */,
-			);
-			path = proj2;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,8 +107,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC0602C52B60FA5D0048515E /* Map.cpp in Sources */,
-				CC0602CD2B62CBF80048515E /* MapTester.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
