@@ -35,14 +35,14 @@ int main () {
     Map reassignResult;
     assert(names.insert("Ricky", 321));
     reassign(names, reassignResult);
-    // MARK: do proper test cases
-    reassignResult.dump();
+    KeyType k1, k2, k3;
+    ValueType v1, v2, v3;
+    assert(reassignResult.size() == 4 && reassignResult.get(0, k, v) && reassignResult.get(1, k1, v1) && reassignResult.get(2, k2, v2) && reassignResult.get(3, k3, v3) && v != v1 != v2 != v3 && v != 456 && v1 != 123 && v2 != 789 && v3 != 321);
     
     assert(names.erase("Ricky"));
     assert(names.insertOrUpdate("Lucy", 456));
     reassign(names, reassignResult);
-    reassignResult.dump();
-    
+    assert(reassignResult.size() == 3 && reassignResult.get(0, k, v) && reassignResult.get(1, k1, v1) && reassignResult.get(2, k2, v2) && ((v == 123 && v1 == 456 && v2 == 456) || (v == 456 && v1 == 456 && v2 == 123)));
     
     // MARK: Rachel's Test Cases
     
@@ -75,5 +75,6 @@ int main () {
     test.swap(test1);
     assert(test.get(0, key, value) && key == "d" && value == 109);
     assert(test.get(1, key, value) && key == "e" && value == 58);
-    cout << "Passed all test cases." << endl;
+    cerr << "Passed all test cases." << endl;
 }
+
