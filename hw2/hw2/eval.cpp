@@ -22,9 +22,6 @@ int evaluate(string infix, const Map& values, string& postfix, int& result){
     postfix = "";
     stack <char> operatorStack;
     
-    if(infix == "" || infix == " ")
-        return 1;
-    
     if(infix.find('(') != -1 || infix.find(')') != -1){
         if(!matchingParantheses(infix))
             return 1;
@@ -82,8 +79,12 @@ int evaluate(string infix, const Map& values, string& postfix, int& result){
             operandStack.push(operationResult);
         }
     }
-    result = operandStack.top();
-    operandStack.pop();
+    if(!operandStack.empty()) {
+        result = operandStack.top();
+        operandStack.pop();
+    }
+    else
+        return 1; // infix is just spaces
     return 0;
 }
 
@@ -161,6 +162,7 @@ int main() {
     assert(evaluate("(", map, postfix_trash, ans) == 1 && ans == 1);
     assert(evaluate(") ", map, postfix_trash, ans) == 1);
     assert(evaluate(" ", map, postfix_trash, ans) == 1);
+    assert(evaluate("    ", map, postfix_trash, ans) == 1);
     assert(evaluate("c+*o", map, postfix_trash, ans) == 1);
     assert(evaluate("c+*z", map, postfix_trash, ans) == 1);
     assert(evaluate("a/(c+)", map, postfix_trash, ans) == 1 && ans == 1);
@@ -168,6 +170,7 @@ int main() {
     assert(evaluate("8 + a", map, postfix_trash, ans) == 1 && ans == 81);
     assert(evaluate("C/o", map, postfix_trash, ans) == 1);
     assert(evaluate("c/o", map, postfix_trash, ans) == 3 && ans == 81);
+    assert(evaluate("z/o", map, postfix_trash, ans) == 2 && ans == 81);
     assert(evaluate("+", map, postfix_trash, ans) == 1);
     assert(evaluate("a & c", map, postfix_trash, ans) == 1);
     assert(evaluate("((((a)))", map, postfix_trash, ans) == 1 && ans == 81);
