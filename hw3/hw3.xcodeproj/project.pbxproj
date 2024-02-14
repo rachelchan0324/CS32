@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CC06031B2B76A4AB0048515E /* animal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC06031A2B76A4AB0048515E /* animal.cpp */; };
+		CCB144362B7BFB4E003A5B98 /* tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCB144352B7BFB4E003A5B98 /* tree.cpp */; };
 		CCFC017A2B79823200AAE98E /* linear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCFC01792B79823200AAE98E /* linear.cpp */; };
 		CCFC017C2B7AE37800AAE98E /* maze.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCFC017B2B7AE37800AAE98E /* maze.cpp */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		CC0603172B76A4AB0048515E /* hw3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hw3; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC06031A2B76A4AB0048515E /* animal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = animal.cpp; sourceTree = "<group>"; };
+		CCB144352B7BFB4E003A5B98 /* tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cpp; sourceTree = "<group>"; };
 		CCFC01792B79823200AAE98E /* linear.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = linear.cpp; sourceTree = "<group>"; };
 		CCFC017B2B7AE37800AAE98E /* maze.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = maze.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +66,7 @@
 				CC06031A2B76A4AB0048515E /* animal.cpp */,
 				CCFC01792B79823200AAE98E /* linear.cpp */,
 				CCFC017B2B7AE37800AAE98E /* maze.cpp */,
+				CCB144352B7BFB4E003A5B98 /* tree.cpp */,
 			);
 			path = hw3;
 			sourceTree = "<group>";
@@ -126,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCFC017A2B79823200AAE98E /* linear.cpp in Sources */,
+				CCB144362B7BFB4E003A5B98 /* tree.cpp in Sources */,
 				CC06031B2B76A4AB0048515E /* animal.cpp in Sources */,
 				CCFC017C2B7AE37800AAE98E /* maze.cpp in Sources */,
 			);
