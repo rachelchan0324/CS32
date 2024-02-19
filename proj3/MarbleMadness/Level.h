@@ -108,7 +108,6 @@ private:
 		for (int x = 0; x < VIEW_WIDTH; x++)
 			if (m_maze[0][x] != wall || m_maze[VIEW_HEIGHT-1][x] != wall)
 				return false;
-
 		return true;
 	}
 };
