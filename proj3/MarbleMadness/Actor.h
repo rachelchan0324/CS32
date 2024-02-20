@@ -13,10 +13,9 @@ public:
     virtual ~Actor();
     StudentWorld* getWorld();
     virtual void doSomething() = 0;
-    int getID();
+    virtual bool push(int dir) = 0;
 private:
     StudentWorld* wrld;
-    int ID;
 };
 
 class Avatar : public Actor {
@@ -24,6 +23,7 @@ public:
     Avatar(int startX, int startY, StudentWorld* wrld);
     ~Avatar();
     virtual void doSomething();
+    virtual bool push(int dir);
 private:
     int peas;
     int hitPoints;
@@ -34,6 +34,7 @@ public:
     Wall(int startX, int startY, StudentWorld* wrld);
     ~Wall();
     virtual void doSomething();
+    virtual bool push(int dir);
 private:
 };
 
@@ -42,6 +43,7 @@ public:
     Marble(int startX, int startY, StudentWorld* wrld);
     ~Marble();
     virtual void doSomething();
+    virtual bool push(int dir);
 private:
     bool alive;
     int hitPoints;
@@ -52,6 +54,7 @@ public:
     Pit(int startX, int startY, StudentWorld* wlrd);
     ~Pit();
     virtual void doSomething();
+    virtual bool push(int dir);
 private:
     bool alive;
 };
