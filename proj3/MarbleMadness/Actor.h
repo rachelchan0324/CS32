@@ -13,8 +13,10 @@ public:
     virtual ~Actor();
     StudentWorld* getWorld();
     virtual void doSomething() = 0;
+    int getID();
 private:
     StudentWorld* wrld;
+    int ID;
 };
 
 class Avatar : public Actor {
@@ -33,6 +35,25 @@ public:
     ~Wall();
     virtual void doSomething();
 private:
+};
+
+class Marble : public Actor {
+public:
+    Marble(int startX, int startY, StudentWorld* wrld);
+    ~Marble();
+    virtual void doSomething();
+private:
+    bool alive;
+    int hitPoints;
+};
+
+class Pit : public Actor{
+public:
+    Pit(int startX, int startY, StudentWorld* wlrd);
+    ~Pit();
+    virtual void doSomething();
+private:
+    bool alive;
 };
 
 #endif

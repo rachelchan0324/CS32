@@ -19,6 +19,9 @@ public:
     virtual int move();
     virtual void cleanUp();
     bool emptySpace(int x, int y);
+    bool isAndPushMarble(int x, int y, int dir);
+    bool pushMarble(list<Actor*>::iterator it, int x, int y, int dir);
+    bool isPit(int x, int y);
 private:
     list <Actor*> actors;
 };

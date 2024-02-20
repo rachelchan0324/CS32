@@ -34,9 +34,12 @@ int StudentWorld::init() {
             Level::MazeEntry item = lev.getContentsOf(c, r);
             if(item == Level::player)
                 actors.push_back(new Avatar(c, r, this));
-            else if(item == Level::wall){
+            else if(item == Level::wall)
                 actors.push_back(new Wall(c, r, this));
-            }
+            else if(item == Level::marble)
+                actors.push_back(new Marble(c, r, this));
+            else if(item == Level::pit)
+                actors.push_back(new Pit(c, r, this));
         }
     }
     return GWSTATUS_CONTINUE_GAME;
@@ -61,6 +64,44 @@ bool StudentWorld::emptySpace(int x, int y){
         it++;
     }
     return true;
+}
+
+bool StudentWorld::isAndPushMarble(int x, int y, int dir){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == x && (*it)->getY() == y){
+            if((*it)->getID() == IID_MARBLE)
+                return pushMarble(it, x, y, dir);
+            return false;
+        }
+        it++;
+    }
+    return false;
+}
+
+bool StudentWorld::pushMarble(list<Actor*>::iterator it, int x, int y, int dir){
+    if(dir == Actor::left)
+        x--;
+    else if(dir == Actor::right)
+        x++;
+    else if(dir == Actor::up)
+        y++;
+    else
+        y--;
+    if(!emptySpace(x, y) && !isPit(x, y))
+        return false;
+    (*it)->moveTo(x, y);
+    return true;
+}
+
+bool StudentWorld::isPit(int x, int y){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == x && (*it)->getY() == y)
+            return (*it)->getID() == IID_PIT;
+        it++;
+    }
+    return false;
 }
 
 void StudentWorld::cleanUp(){
