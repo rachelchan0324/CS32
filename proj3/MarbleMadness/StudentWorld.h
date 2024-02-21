@@ -9,8 +9,6 @@
 
 using namespace std;
 
-// Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
-
 class StudentWorld : public GameWorld {
 public:
     StudentWorld(std::string assetPath);
@@ -20,7 +18,7 @@ public:
     virtual void cleanUp();
     
     bool emptySpace(int x, int y);
-    list<Actor*>::iterator actorAt(int x, int y);
+    Actor* actorAt(int x, int y);
 private:
     list <Actor*> actors;
 };

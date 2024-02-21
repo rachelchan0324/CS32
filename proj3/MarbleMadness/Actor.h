@@ -11,11 +11,16 @@ class Actor : public GraphObject {
 public:
     Actor(int ID, int startX, int startY, int startDir, StudentWorld* wrld);
     virtual ~Actor();
-    StudentWorld* getWorld();
+    StudentWorld* getWorld() {return wrld;}
     virtual void doSomething() = 0;
-    virtual bool push(int dir) = 0;
+    virtual bool canBePushed() const {return false;}
+    virtual bool push(int dir) {return false;}
+    virtual bool canBePushedOn() const {return false;}
+    virtual bool isAlive() const {return alive;}
+    virtual void setDead() {alive = false;}
 private:
     StudentWorld* wrld;
+    bool alive;
 };
 
 class Avatar : public Actor {
@@ -23,7 +28,6 @@ public:
     Avatar(int startX, int startY, StudentWorld* wrld);
     ~Avatar();
     virtual void doSomething();
-    virtual bool push(int dir);
 private:
     int peas;
     int hitPoints;
@@ -34,7 +38,6 @@ public:
     Wall(int startX, int startY, StudentWorld* wrld);
     ~Wall();
     virtual void doSomething();
-    virtual bool push(int dir);
 private:
 };
 
@@ -43,9 +46,9 @@ public:
     Marble(int startX, int startY, StudentWorld* wrld);
     ~Marble();
     virtual void doSomething();
+    virtual bool canBePushed() const;
     virtual bool push(int dir);
 private:
-    bool alive;
     int hitPoints;
 };
 
@@ -54,9 +57,8 @@ public:
     Pit(int startX, int startY, StudentWorld* wlrd);
     ~Pit();
     virtual void doSomething();
-    virtual bool push(int dir);
+    virtual bool canBePushedOn() const;
 private:
-    bool alive;
 };
 
 #endif

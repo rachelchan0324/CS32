@@ -8,8 +8,6 @@ GameWorld* createStudentWorld(string assetPath) {
 	return new StudentWorld(assetPath);
 }
 
-// Students:  Add code to this file, StudentWorld.h, Actor.h, and Actor.cpp
-
 StudentWorld::StudentWorld(string assetPath)
 : GameWorld(assetPath){
 }
@@ -46,12 +44,21 @@ int StudentWorld::init() {
 }
 
 int StudentWorld::move() {
-    // This code is here merely to allow the game to build, run, and terminate after you type q
     setGameStatText("Game will end when you type q");
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         (*it)->doSomething();
         it++;
+    }
+    it = actors.begin();
+    while(it != actors.end()){
+        if(!(*it)->isAlive()){
+            delete *it; // remove object
+            *it = nullptr; // not necessary
+            it = actors.erase(it); // remove from the list
+        }
+        else
+            it++;
     }
 	return GWSTATUS_CONTINUE_GAME;
 }
@@ -66,14 +73,22 @@ bool StudentWorld::emptySpace(int x, int y){
     return true;
 }
 
-list<Actor*>::iterator StudentWorld::actorAt(int x, int y){
+Actor* StudentWorld::actorAt(int x, int y){
+    // prioritize returning pit
     list<Actor*>::iterator it = actors.begin();
+    list<Actor*>::iterator pit = actors.end();
     while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y)
-            return it;
+        if((*it)->getX() == x && (*it)->getY() == y){
+            if((*it)->canBePushedOn()) // found a pit! save it in a temp variable
+                pit = it;
+            else
+                return *it;
+        }
         it++;
     }
-    return actors.end();
+    if(pit != actors.end())
+        return *pit;
+    return nullptr;
 }
 
 void StudentWorld::cleanUp(){
