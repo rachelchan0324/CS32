@@ -4,20 +4,9 @@
 #include "GraphObject.h"
 
 //MARK: ACTOR
-Actor::Actor(int ID, int startX, int startY, int startDir, StudentWorld* wrld)
-: GraphObject(ID, startX, startY, startDir), wrld(wrld), alive(true){
+Actor::Actor(int ID, int startX, int startY, int startDir, int hitPoints, StudentWorld* wrld)
+: GraphObject(ID, startX, startY, startDir), wrld(wrld), alive(true), hitPoints(hitPoints){
     setVisible(true);
-}
-
-Actor::~Actor(){
-}
-
-// MARK: AVATAR
-Avatar::Avatar(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_PLAYER, startX, startY, right, wrld), peas(0), hitPoints(0) {
-}
-
-Avatar::~Avatar(){
 }
 
 void Actor::getNewCoordinates(int& x, int& y, int dir){
@@ -31,15 +20,20 @@ void Actor::getNewCoordinates(int& x, int& y, int dir){
         y--;
 }
 
+// MARK: AVATAR
+Avatar::Avatar(int startX, int startY, StudentWorld* wrld)
+: Actor(IID_PLAYER, startX, startY, right, 20, wrld), peas(20) {
+}
+
 void Avatar::doSomething(){
     int ch;
     if (getWorld()->getKey(ch)) {
         switch(ch){
             case KEY_PRESS_SPACE:
-                /* if(peas > 0){
+                if(peas > 0){
                     shootPea();
                     peas--;
-                } */
+                }
                 break;
             case KEY_PRESS_RIGHT:
             case KEY_PRESS_LEFT:
@@ -66,29 +60,38 @@ void Avatar::doSomething(){
     }
 }
 
+void Avatar::shootPea(){
+    int peaX = getX();
+    int peaY = getY();
+    getNewCoordinates(peaX, peaY, getDirection());
+    getWorld()->addPea(peaX, peaY, getDirection());
+    getWorld()->playSound(SOUND_PLAYER_FIRE);
+}
+
+bool Avatar::damage(){
+    decHitPoints(2);
+    if(getHitPoints() <= 0)
+        setDead();
+    return true;
+}
+
 // MARK: WALL
 Wall::Wall(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_WALL, startX, startY, none, wrld) {
-}
-
-Wall::~Wall(){
-}
-
-void Wall::doSomething(){
+: Actor(IID_WALL, startX, startY, none, -1, wrld) {
 }
 
 // MARK: MARBLE
 Marble::Marble(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_MARBLE, startX, startY, none, wrld){
+: Actor(IID_MARBLE, startX, startY, none, 10, wrld){
 }
 
 void Marble::doSomething(){
 }
 
-Marble::~Marble(){
-}
-
-bool Marble::canBePushed() const{
+bool Marble::damage(){
+    decHitPoints(2);
+    if(getHitPoints() <= 0)
+        setDead();
     return true;
 }
 
@@ -96,7 +99,7 @@ bool Marble::push(int dir){
     int newX = getX();
     int newY = getY();
     getNewCoordinates(newX, newY, dir);
-    if(getWorld()->emptySpace(newX, newY) || (getWorld()->actorAt(newX, newY))->canBePushedOn()){
+    if(getWorld()->emptySpace(newX, newY) || !(getWorld()->actorAt(newX, newY))->blocksMovement()){
         moveTo(newX, newY);
         return true;
     }
@@ -105,22 +108,52 @@ bool Marble::push(int dir){
 
 // MARK: PIT
 Pit::Pit(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_PIT, startX, startY, none, wrld) {
-}
-
-Pit::~Pit() {
-}
-
-bool Pit::canBePushedOn() const{
-    return true;
+: Actor(IID_PIT, startX, startY, none, -1, wrld) {
 }
 
 void Pit::doSomething(){
     if(!isAlive())
         return;
-    Actor* obj = getWorld()->actorAtSamePlace(getX(), getY(), this);
+    Actor* obj = getWorld()->actorAtSamePlace(this);
     if(obj != nullptr && obj->canBePushed()){
         obj->setDead();
         setDead();
     }
+}
+
+// MARK: PEA
+Pea::Pea(int startX, int startY, int startDir, StudentWorld* wrld)
+: Actor(IID_PEA, startX, startY, startDir, -1, wrld), moved(false){
+}
+
+void Pea::doSomething(){
+    if(moved){
+        if(!isAlive())
+            return;
+        
+        Actor* obj = getWorld()->actorAtSamePlace(this);
+        // damage marble, robot or player
+        if(obj != nullptr && (obj->canBePushed() || obj==getWorld()->getPlayer()) && obj->damage()){
+            setDead();
+            return;
+        }
+        // pea dies if it hits a wall or robot factory
+        if(obj != nullptr && obj->blocksMovement()){
+            setDead();
+            return;
+        }
+        // move 1 in the specified direction
+        int newX = getX();
+        int newY = getY();
+        getNewCoordinates(newX, newY, getDirection());
+        moveTo(newX, newY);
+        
+        /** check new square */
+        obj = getWorld()->actorAtSamePlace(this);
+        if(obj != nullptr && (obj->canBePushed() || obj==getWorld()->getPlayer()) && obj->damage())
+            setDead();
+        else if(obj != nullptr && obj->blocksMovement())
+            setDead();
+    }
+    moved = true;
 }

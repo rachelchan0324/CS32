@@ -18,10 +18,13 @@ public:
     virtual void cleanUp();
     
     bool emptySpace(int x, int y);
+    Actor* getPlayer() {return m_player;}
     Actor* actorAt(int x, int y);
-    Actor* actorAtSamePlace(int x, int y, Actor*);
+    Actor* actorAtSamePlace(Actor*);
+    void addPea(int x, int y, int dir);
 private:
     list <Actor*> actors;
+    Actor* m_player;
 };
 
 #endif // STUDENTWORLD_H_

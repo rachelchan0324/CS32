@@ -9,7 +9,7 @@ GameWorld* createStudentWorld(string assetPath) {
 }
 
 StudentWorld::StudentWorld(string assetPath)
-: GameWorld(assetPath){
+: GameWorld(assetPath), m_player(nullptr){
 }
 
 StudentWorld::~StudentWorld(){
@@ -30,8 +30,10 @@ int StudentWorld::init() {
     for(int r = 0; r < VIEW_HEIGHT; r++){
         for(int c = 0; c < VIEW_WIDTH; c++){
             Level::MazeEntry item = lev.getContentsOf(c, r);
-            if(item == Level::player)
-                actors.push_back(new Avatar(c, r, this));
+            if(item == Level::player){
+                m_player = new Avatar(c, r, this);
+                actors.push_back(m_player);
+            }
             else if(item == Level::wall)
                 actors.push_back(new Wall(c, r, this));
             else if(item == Level::marble)
@@ -83,14 +85,18 @@ Actor* StudentWorld::actorAt(int x, int y){
     return nullptr;
 }
 
-Actor* StudentWorld::actorAtSamePlace(int x, int y, Actor* ptr){
+Actor* StudentWorld::actorAtSamePlace(Actor* ptr){
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y && (*it) != ptr)
+        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it) != ptr)
             return *it;
         it++;
     }
     return nullptr;
+}
+
+void StudentWorld::addPea(int x, int y, int dir){
+    actors.push_back(new Pea(x, y, dir, this));
 }
 
 void StudentWorld::cleanUp(){
