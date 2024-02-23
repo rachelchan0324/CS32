@@ -13,10 +13,20 @@ Actor::Actor(int ID, int startX, int startY, int startDir, StudentWorld* wrld)
 Actor::~Actor(){
 }
 
-// MARK: AVATAR
+void Actor::getNewCoordinates(int& x, int& y, int dir){
+    if(dir == right)
+        x++;
+    else if(dir == left)
+        x--;
+    else if(dir == up)
+        y++;
+    else
+        y--;
+}
 
+// MARK: AVATAR
 Avatar::Avatar(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_PLAYER, startX, startY, right, wrld), peas(0), hitPoints(0) {
+: Actor(IID_PLAYER, startX, startY, right, wrld), peas(20), hitPoints(0) {
 }
 
 Avatar::~Avatar(){
@@ -25,46 +35,47 @@ Avatar::~Avatar(){
 void Avatar::doSomething(){
     int ch;
     if (getWorld()->getKey(ch)) {
-        Actor* objInDest;
-        switch (ch) {
-            case KEY_PRESS_LEFT:
-                setDirection(left);
-                objInDest = getWorld()->actorAt(getX()-1, getY());
-                if(getWorld()->emptySpace(getX()-1, getY()))
-                    moveTo(getX() - 1, getY());
-                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(left))
-                    moveTo(getX() - 1, getY());
+        switch(ch){
+            case KEY_PRESS_SPACE:
+                if(peas > 0){
+                    shootPea();
+                    peas--;
+                }
                 break;
             case KEY_PRESS_RIGHT:
-                objInDest = getWorld()->actorAt(getX() + 1, getY());
-                setDirection(right);
-                if(getWorld()->emptySpace(getX() + 1, getY()))
-                    moveTo(getX() + 1, getY());
-                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(right))
-                    moveTo(getX() + 1, getY());
-                break;
+            case KEY_PRESS_LEFT:
             case KEY_PRESS_UP:
-                setDirection(up);
-                objInDest = getWorld()->actorAt(getX(), getY() + 1);
-                if(getWorld()->emptySpace(getX(), getY() + 1))
-                   moveTo(getX(), getY() + 1);
-                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(up))
-                    moveTo(getX(), getY() + 1);
-                break;
             case KEY_PRESS_DOWN:
-                setDirection(down);
-                objInDest = getWorld()->actorAt(getX(), getY() - 1);
-                if(getWorld()->emptySpace(getX(), getY() - 1))
-                    moveTo(getX(), getY() - 1);
-                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(down))
-                    moveTo(getX(), getY() - 1);
-                break;
+                Actor* objInDest;
+                int newX = getX();
+                int newY = getY();
+                if(ch == KEY_PRESS_RIGHT)
+                    setDirection(right);
+                else if(ch == KEY_PRESS_LEFT)
+                    setDirection(left);
+                else if(ch == KEY_PRESS_UP)
+                    setDirection(up);
+                else
+                    setDirection(down);
+                getNewCoordinates(newX, newY, getDirection());
+                objInDest = getWorld()->actorAt(newX, newY);
+                if(getWorld()->emptySpace(newX, newY))
+                    moveTo(newX, newY);
+                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(getDirection()))
+                    moveTo(newX, newY);
         }
     }
 }
 
-// MARK: WALL
+void Avatar::shootPea(){
+    int peaX = getX();
+    int peaY = getY();
+    getNewCoordinates(peaX, peaY, getDirection());
+    getWorld()->playSound(SOUND_PLAYER_FIRE);
+    getWorld()->addPea(peaX, peaY, getDirection());
+}
 
+// MARK: WALL
 Wall::Wall(int startX, int startY, StudentWorld* wrld)
 : Actor(IID_WALL, startX, startY, none, wrld) {
 }
@@ -75,9 +86,7 @@ Wall::~Wall(){
 void Wall::doSomething(){
 }
 
-
 // MARK: MARBLE
-
 Marble::Marble(int startX, int startY, StudentWorld* wrld)
 : Actor(IID_MARBLE, startX, startY, none, wrld){
 }
@@ -95,14 +104,7 @@ bool Marble::canBePushed() const{
 bool Marble::push(int dir){
     int newX = getX();
     int newY = getY();
-    if(dir == right)
-        newX++;
-    else if(dir == left)
-        newX--;
-    else if(dir == up)
-        newY++;
-    else if(dir == down)
-        newY--;
+    getNewCoordinates(newX, newY, dir);
     if(getWorld()->emptySpace(newX, newY) || (getWorld()->actorAt(newX, newY))->canBePushedOn()){
         moveTo(newX, newY);
         return true;
@@ -110,8 +112,12 @@ bool Marble::push(int dir){
     return false;
 }
 
-// MARK: PIT
+bool Marble::swallow(){
+    setDead();
+    return true;
+}
 
+// MARK: PIT
 Pit::Pit(int startX, int startY, StudentWorld* wrld)
 : Actor(IID_PIT, startX, startY, none, wrld) {
 }
@@ -126,9 +132,19 @@ bool Pit::canBePushedOn() const{
 void Pit::doSomething(){
     if(!isAlive())
         return;
-    Actor* objAtPit = getWorld()->actorAt(getX(), getY());
-    if(objAtPit->canBePushed()){
+    if(getWorld()->swallowObjectAt(getX(), getY()))
         setDead();
-        objAtPit->setDead();
-    }
+}
+
+// MARK: PEA
+Pea::Pea(int startX, int startY, int startDir, StudentWorld* wrld)
+: Actor(IID_PEA, startX, startY, startDir, wrld){
+}
+
+Pea::~Pea() {
+}
+
+void Pea::doSomething(){
+    if(!isAlive())
+        return;
 }

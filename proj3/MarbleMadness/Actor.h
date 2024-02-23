@@ -5,19 +5,24 @@
 
 class StudentWorld;
 
-// Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
-
 class Actor : public GraphObject {
 public:
     Actor(int ID, int startX, int startY, int startDir, StudentWorld* wrld);
     virtual ~Actor();
+    
     StudentWorld* getWorld() {return wrld;}
     virtual void doSomething() = 0;
-    virtual bool canBePushed() const {return false;}
     virtual bool push(int dir) {return false;}
-    virtual bool canBePushedOn() const {return false;}
     virtual bool isAlive() const {return alive;}
     virtual void setDead() {alive = false;}
+    
+    // identifier methods
+    virtual bool swallow() {return false;}
+    virtual bool canBePushedOn() const {return false;}
+    virtual bool canBePushed() const {return false;}
+    virtual bool canBeAttacked() const {return false;}
+    
+    virtual void getNewCoordinates(int& x, int& y, int dir);
 private:
     StudentWorld* wrld;
     bool alive;
@@ -28,9 +33,11 @@ public:
     Avatar(int startX, int startY, StudentWorld* wrld);
     ~Avatar();
     virtual void doSomething();
+    virtual bool canBeAttacked() const {return true;}
 private:
     int peas;
     int hitPoints;
+    void shootPea();
 };
 
 class Wall : public Actor {
@@ -48,16 +55,26 @@ public:
     virtual void doSomething();
     virtual bool canBePushed() const;
     virtual bool push(int dir);
+    virtual bool canBeAttacked() const {return true;}
+    virtual bool swallow();
 private:
     int hitPoints;
 };
 
 class Pit : public Actor{
 public:
-    Pit(int startX, int startY, StudentWorld* wlrd);
+    Pit(int startX, int startY, StudentWorld* wrld);
     ~Pit();
     virtual void doSomething();
     virtual bool canBePushedOn() const;
+private:
+};
+
+class Pea : public Actor{
+public:
+    Pea(int startX, int startY, int startDir, StudentWorld* wrld);
+    ~Pea();
+    virtual void doSomething();
 private:
 };
 
