@@ -19,10 +19,7 @@ public:
     
     bool emptySpace(int x, int y);
     Actor* actorAt(int x, int y);
-    Actor* otherActorAt(int x, int y);
-    void addPea(int x, int y, int dir);
-    
-    bool swallowObjectAt(int x, int y);
+    Actor* actorAtSamePlace(int x, int y, Actor*);
 private:
     list <Actor*> actors;
 };

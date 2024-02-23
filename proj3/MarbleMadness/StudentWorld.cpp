@@ -5,7 +5,7 @@
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath) {
-	return new StudentWorld(assetPath);
+    return new StudentWorld(assetPath);
 }
 
 StudentWorld::StudentWorld(string assetPath)
@@ -43,10 +43,6 @@ int StudentWorld::init() {
     return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::addPea(int x, int y, int dir){
-    actors.push_back(new Pea(x, y, dir, this));
-}
-
 int StudentWorld::move() {
     setGameStatText("Game will end when you type q");
     list<Actor*>::iterator it = actors.begin();
@@ -64,7 +60,7 @@ int StudentWorld::move() {
         else
             it++;
     }
-	return GWSTATUS_CONTINUE_GAME;
+    return GWSTATUS_CONTINUE_GAME;
 }
 
 bool StudentWorld::emptySpace(int x, int y){
@@ -81,20 +77,20 @@ Actor* StudentWorld::actorAt(int x, int y){
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y)
-                return *it;
+            return *it;
         it++;
     }
     return nullptr;
 }
 
-bool StudentWorld::swallowObjectAt(int x, int y){
+Actor* StudentWorld::actorAtSamePlace(int x, int y, Actor* ptr){
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y)
-            if((*it)->swallow())
-                return true;
+        if((*it)->getX() == x && (*it)->getY() == y && (*it) != ptr)
+            return *it;
+        it++;
     }
-    return false;
+    return nullptr;
 }
 
 void StudentWorld::cleanUp(){
