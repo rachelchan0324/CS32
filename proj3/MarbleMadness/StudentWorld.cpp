@@ -40,6 +40,10 @@ int StudentWorld::init() {
                 actors.push_back(new Marble(c, r, this));
             else if(item == Level::pit)
                 actors.push_back(new Pit(c, r, this));
+            else if(item == Level::horiz_ragebot)
+                actors.push_back(new RageBot(c, r, Actor::right, this));
+            else if(item == Level::vert_ragebot)
+                actors.push_back(new RageBot(c, r, Actor::down, this));
         }
     }
     return GWSTATUS_CONTINUE_GAME;
@@ -93,6 +97,69 @@ Actor* StudentWorld::actorAtSamePlace(Actor* ptr){
         it++;
     }
     return nullptr;
+}
+
+// returns a boolean telling whether or not the pea dies
+bool StudentWorld::doSomethingToActorsHitByPea(Actor* ptr){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        // damage all actors that CAN be damaged
+        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it) != ptr && (*it)->getDamaged()){
+            ptr->setDead();
+            return true;
+        }
+        // if it hits a wall
+        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it)->blocksMovement()){
+            ptr->setDead();
+            return true;
+        }
+        it++;
+    }
+    return false;
+}
+
+bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr){
+    // find range between actor and player
+    int startX, endX, startY, endY;
+    if(ptr->getDirection() == Actor::right){
+        startY = endY = ptr->getY();
+        startX = ptr->getX() + 1;
+        endX = getPlayer()->getX() - 1;
+    }
+    else if(ptr->getDirection() == Actor::left){
+        startY = endY = ptr->getY();
+        startX = getPlayer()->getX() + 1;
+        endX = ptr->getX() - 1;
+    }
+    else if(ptr->getDirection() == Actor::up){
+        startX = endX = ptr->getX();
+        startY = ptr->getY() + 1;
+        endY = getPlayer()->getY() - 1;
+    }
+    else{
+        startX = endX = ptr->getX();
+        startY = getPlayer()->getY() + 1;
+        endY = ptr->getY() - 1;
+    }
+    
+    // check to see if any actors in that range block movement
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->blocksMovement())
+            return true;
+        it++;
+    }
+    return false;
+}
+
+bool StudentWorld::obstacleAt(int x, int y){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == x && (*it)->getY() == y && (*it)->blocksMovement())
+            return true;
+        it++;
+    }
+    return false;
 }
 
 void StudentWorld::addPea(int x, int y, int dir){

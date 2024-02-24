@@ -22,6 +22,11 @@ public:
     Actor* actorAt(int x, int y);
     Actor* actorAtSamePlace(Actor*);
     void addPea(int x, int y, int dir);
+    bool obstacleAt(int x, int y);
+    
+    // actor-specific functions
+    bool doSomethingToActorsHitByPea(Actor*);
+    bool obstaclesBetweenActorAndPlayer(Actor*);
 private:
     list <Actor*> actors;
     Actor* m_player;

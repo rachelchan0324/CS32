@@ -21,9 +21,10 @@ public:
     virtual bool push(int dir) {return false;}
     virtual bool canBePushed() const {return false;}
     virtual bool blocksMovement() const {return true;}
-    virtual bool damage() {return false;}
+    virtual bool getDamaged() {return false;}
 
     virtual void getNewCoordinates(int& x, int& y, int dir);
+    void shootPea();
 private:
     StudentWorld* wrld;
     bool alive;
@@ -35,10 +36,9 @@ public:
     Avatar(int startX, int startY, StudentWorld* wrld);
     ~Avatar() {}
     virtual void doSomething();
-    virtual bool damage();
+    virtual bool getDamaged();
 private:
     int peas;
-    void shootPea();
 };
 
 class Wall : public Actor {
@@ -56,7 +56,7 @@ public:
     virtual void doSomething();
     virtual bool canBePushed() const {return true;}
     virtual bool push(int dir);
-    virtual bool damage();
+    virtual bool getDamaged();
 private:
 };
 
@@ -77,6 +77,18 @@ public:
     virtual bool blocksMovement() const {return false;}
 private:
     bool moved;
+};
+
+class RageBot : public Actor{
+public:
+    RageBot(int startX, int startY, int startDir, StudentWorld* wrld);
+    ~RageBot() {}
+    virtual void doSomething();
+    virtual bool getDamaged();
+private:
+    bool facingPlayer();
+    int ticks;
+    int currTick;
 };
 
 #endif
