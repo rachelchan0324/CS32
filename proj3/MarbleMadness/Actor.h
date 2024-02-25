@@ -9,13 +9,13 @@ class Actor : public GraphObject {
 public:
     Actor(int ID, int startX, int startY, int startDir, int hitPoints, StudentWorld* wrld);
     virtual ~Actor() {}
-    StudentWorld* getWorld() {return wrld;}
+    StudentWorld* getWorld() const {return wrld;}
     virtual void doSomething() = 0;
     
     bool isAlive() const {return alive;}
     void setDead() {alive = false;}
-    int getHitPoints() const {return hitPoints;}
-    void decHitPoints(int p) {hitPoints-=p;}
+    int getHealth() const {return health;}
+    void decHealth(int p) {health-=p;}
     
     // identifier methods
     virtual bool push(int dir) {return false;}
@@ -23,12 +23,12 @@ public:
     virtual bool blocksMovement() const {return true;}
     virtual bool getDamaged() {return false;}
 
-    virtual void getNewCoordinates(int& x, int& y, int dir);
+    virtual void getNewCoordinates(int& x, int& y, int dir) const;
     void shootPea();
 private:
     StudentWorld* wrld;
     bool alive;
-    int hitPoints;
+    int health;
 };
 
 class Avatar : public Actor {
@@ -37,6 +37,7 @@ public:
     ~Avatar() {}
     virtual void doSomething();
     virtual bool getDamaged();
+    int getPeas() const {return peas;}
 private:
     int peas;
 };
@@ -89,6 +90,14 @@ private:
     bool facingPlayer();
     int ticks;
     int currTick;
+};
+
+class Crystal : public Actor{
+public:
+    Crystal(int startX, int startY, StudentWorld* wrld);
+    ~Crystal() {}
+    virtual void doSomething();
+private:
 };
 
 #endif

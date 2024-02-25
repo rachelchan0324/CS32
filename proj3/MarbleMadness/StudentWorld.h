@@ -13,23 +13,28 @@ class StudentWorld : public GameWorld {
 public:
     StudentWorld(std::string assetPath);
     ~StudentWorld();
+
     virtual int init();
     virtual int move();
     virtual void cleanUp();
     
-    bool emptySpace(int x, int y);
-    Actor* getPlayer() {return m_player;}
-    Actor* actorAt(int x, int y);
-    Actor* actorAtSamePlace(Actor*);
+    string getStatusLine() const;
+    int getBonus() const {return bonus;}
+    
+    bool emptySpace(int x, int y) const;
+    Actor* getPlayer() const {return m_player;}
+    Actor* actorAt (int x, int y) const;
+    Actor* actorAtSamePlace (Actor*) const;
     void addPea(int x, int y, int dir);
-    bool obstacleAt(int x, int y);
+    bool obstacleAt (int x, int y) const;
     
     // actor-specific functions
     bool doSomethingToActorsHitByPea(Actor*);
-    bool obstaclesBetweenActorAndPlayer(Actor*);
+    bool obstaclesBetweenActorAndPlayer(Actor*) const;
 private:
     list <Actor*> actors;
-    Actor* m_player;
+    Avatar* m_player;
+    int bonus;
 };
 
 #endif // STUDENTWORLD_H_

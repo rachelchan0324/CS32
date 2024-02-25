@@ -4,12 +4,12 @@
 #include "GraphObject.h"
 
 //MARK: ACTOR
-Actor::Actor(int ID, int startX, int startY, int startDir, int hitPoints, StudentWorld* wrld)
-: GraphObject(ID, startX, startY, startDir), wrld(wrld), alive(true), hitPoints(hitPoints){
+Actor::Actor(int ID, int startX, int startY, int startDir, int health, StudentWorld* wrld)
+: GraphObject(ID, startX, startY, startDir), wrld(wrld), alive(true), health(health){
     setVisible(true);
 }
 
-void Actor::getNewCoordinates(int& x, int& y, int dir){
+void Actor::getNewCoordinates(int& x, int& y, int dir) const{
     if(dir == right)
         x++;
     else if(dir == left)
@@ -26,7 +26,6 @@ void Actor::shootPea(){
     getNewCoordinates(peaX, peaY, getDirection());
     getWorld()->addPea(peaX, peaY, getDirection());
 }
-
 
 // MARK: AVATAR
 Avatar::Avatar(int startX, int startY, StudentWorld* wrld)
@@ -70,9 +69,10 @@ void Avatar::doSomething(){
 }
 
 bool Avatar::getDamaged(){
-    decHitPoints(2);
-    if(getHitPoints() <= 0){
+    decHealth(2);
+    if(getHealth() <= 0){
         setDead();
+        getWorld()->decLives();
         getWorld()->playSound(SOUND_PLAYER_DIE);
     }
     else
@@ -94,8 +94,8 @@ void Marble::doSomething(){
 }
 
 bool Marble::getDamaged(){
-    decHitPoints(2);
-    if(getHitPoints() <= 0)
+    decHealth(2);
+    if(getHealth() <= 0)
         setDead();
     return true;
 }
@@ -205,14 +205,30 @@ bool RageBot::facingPlayer(){
 }
 
 bool RageBot::getDamaged(){
-    decHitPoints(2);
-    if(getHitPoints() <= 0){
+    decHealth(2);
+    if(getHealth() <= 0){
         setDead();
+        getWorld()->increaseScore(100);
         getWorld()->playSound(SOUND_ROBOT_DIE);
     }
     else{
         getWorld()->playSound(SOUND_ROBOT_IMPACT);
-        // TODO: Inform the StudentWorld object that the user is to receive 100 more points.
     }
     return true;
 }
+
+//MARK: CRYSTAL
+Crystal::Crystal(int startX, int startY, StudentWorld* wrld)
+: Actor(IID_CRYSTAL, startX, startY, none, -1, wrld) {
+}
+
+void Crystal::doSomething(){
+    if(!isAlive())
+        return;
+    if(getWorld()->getPlayer()->getX() == getX() && getWorld()->getPlayer()->getY()==getY()){
+        getWorld()->increaseScore(50);
+        setDead();
+        getWorld()->playSound(SOUND_GOT_GOODIE);
+    }
+}
+

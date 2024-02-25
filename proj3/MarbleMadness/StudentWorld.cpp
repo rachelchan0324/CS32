@@ -2,6 +2,8 @@
 #include "GameConstants.h"
 #include "Level.h"
 #include <string>
+#include <iostream> // defines the overloads of the << operator
+#include <sstream>  // defines the type std::ostringstream
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath) {
@@ -9,7 +11,7 @@ GameWorld* createStudentWorld(string assetPath) {
 }
 
 StudentWorld::StudentWorld(string assetPath)
-: GameWorld(assetPath), m_player(nullptr){
+: GameWorld(assetPath), m_player(nullptr), bonus(1000){
 }
 
 StudentWorld::~StudentWorld(){
@@ -44,6 +46,8 @@ int StudentWorld::init() {
                 actors.push_back(new RageBot(c, r, Actor::right, this));
             else if(item == Level::vert_ragebot)
                 actors.push_back(new RageBot(c, r, Actor::down, this));
+            else if(item == Level::crystal)
+                actors.push_back(new Crystal(c, r, this));
         }
     }
     return GWSTATUS_CONTINUE_GAME;
@@ -54,6 +58,8 @@ int StudentWorld::move() {
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         (*it)->doSomething();
+        if(!m_player->isAlive())
+            return GWSTATUS_PLAYER_DIED;
         it++;
     }
     it = actors.begin();
@@ -66,11 +72,31 @@ int StudentWorld::move() {
         else
             it++;
     }
+    setGameStatText(getStatusLine());
+    if(bonus > 0)
+        bonus--;
     return GWSTATUS_CONTINUE_GAME;
 }
 
-bool StudentWorld::emptySpace(int x, int y){
-    list<Actor*>::iterator it = actors.begin();
+string StudentWorld::getStatusLine() const{
+    int score = getScore();
+    int level = getLevel();
+    int lives = getLives();
+    int healthPercent = m_player->getHealth() * 5;
+    int ammo = m_player->getPeas();
+    int bonus = getBonus();
+    
+    ostringstream oss;
+    oss.setf(ios::fixed);
+    oss.fill('0');
+    oss << "Score: " << setw(7) << score << "  Level: " << setw(2) << level;
+    oss.fill(' ');
+    oss << "  Lives: " << setw(2) << lives << "  Health: " << setw(3) << healthPercent << "%" << "  Ammo: " << setw(3) << ammo << "  Bonus: " << setw(4) << bonus;
+    return oss.str();
+}
+
+bool StudentWorld::emptySpace(int x, int y) const{
+    list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y)
             return false;
@@ -79,8 +105,8 @@ bool StudentWorld::emptySpace(int x, int y){
     return true;
 }
 
-Actor* StudentWorld::actorAt(int x, int y){
-    list<Actor*>::iterator it = actors.begin();
+Actor* StudentWorld::actorAt(int x, int y) const{
+    list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y)
             return *it;
@@ -89,8 +115,8 @@ Actor* StudentWorld::actorAt(int x, int y){
     return nullptr;
 }
 
-Actor* StudentWorld::actorAtSamePlace(Actor* ptr){
-    list<Actor*>::iterator it = actors.begin();
+Actor* StudentWorld::actorAtSamePlace(Actor* ptr) const{
+    list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it) != ptr)
             return *it;
@@ -118,7 +144,7 @@ bool StudentWorld::doSomethingToActorsHitByPea(Actor* ptr){
     return false;
 }
 
-bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr){
+bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr) const{
     // find range between actor and player
     int startX, endX, startY, endY;
     if(ptr->getDirection() == Actor::right){
@@ -143,7 +169,7 @@ bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr){
     }
     
     // check to see if any actors in that range block movement
-    list<Actor*>::iterator it = actors.begin();
+    list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->blocksMovement())
             return true;
@@ -152,8 +178,8 @@ bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr){
     return false;
 }
 
-bool StudentWorld::obstacleAt(int x, int y){
-    list<Actor*>::iterator it = actors.begin();
+bool StudentWorld::obstacleAt(int x, int y) const{
+    list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y && (*it)->blocksMovement())
             return true;
