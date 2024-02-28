@@ -3,176 +3,200 @@
 #include "GameConstants.h"
 #include "GraphObject.h"
 
-//MARK: ACTOR
-Actor::Actor(int ID, int startX, int startY, int startDir, int health, StudentWorld* wrld)
-: GraphObject(ID, startX, startY, startDir), wrld(wrld), alive(true), health(health){
+//MARK: Actor
+Actor::Actor(StudentWorld* world, int startX, int startY, int imageID, int hitPoints, int startDir)
+: GraphObject(imageID, startX, startY, startDir), alive(true), hitPoints(hitPoints), world(world) {
     setVisible(true);
 }
 
-void Actor::getNewCoordinates(int& x, int& y, int dir) const{
-    if(dir == right)
-        x++;
-    else if(dir == left)
-        x--;
-    else if(dir == up)
-        y++;
+void Actor::getDxDy(int& dx, int& dy){
+    dx = 0;
+    dy = 0;
+    if(getDirection() == right)
+        dx = 1;
+    else if(getDirection() == left)
+        dx = -1;
+    else if(getDirection() == up)
+        dy = 1;
     else
-        y--;
+        dy = -1;
 }
 
-void Actor::shootPea(){
-    int peaX = getX();
-    int peaY = getY();
-    getNewCoordinates(peaX, peaY, getDirection());
-    getWorld()->addPea(peaX, peaY, getDirection());
+// MARK: Agent
+Agent::Agent(StudentWorld* world, int startX, int startY, int imageID, int hitPoints, int startDir)
+: Actor(world, startX, startY, imageID, hitPoints, startDir){
 }
 
-// MARK: AVATAR
-Avatar::Avatar(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_PLAYER, startX, startY, right, 20, wrld), peas(20) {
-}
-
-void Avatar::doSomething(){
-    int ch;
-    if (getWorld()->getKey(ch)) {
-        switch(ch){
-            case KEY_PRESS_SPACE:
-                if(peas > 0){
-                    shootPea();
-                    getWorld()->playSound(SOUND_PLAYER_FIRE);
-                    peas--;
-                }
-                break;
-            case KEY_PRESS_RIGHT:
-            case KEY_PRESS_LEFT:
-            case KEY_PRESS_UP:
-            case KEY_PRESS_DOWN:
-                Actor* objInDest;
-                int newX = getX();
-                int newY = getY();
-                if(ch == KEY_PRESS_RIGHT)
-                    setDirection(right);
-                else if(ch == KEY_PRESS_LEFT)
-                    setDirection(left);
-                else if(ch == KEY_PRESS_UP)
-                    setDirection(up);
-                else
-                    setDirection(down);
-                getNewCoordinates(newX, newY, getDirection());
-                objInDest = getWorld()->actorAt(newX, newY);
-                if(getWorld()->emptySpace(newX, newY))
-                    moveTo(newX, newY);
-                else if(objInDest != nullptr && objInDest->canBePushed() && objInDest->push(getDirection()))
-                    moveTo(newX, newY);
-        }
-    }
-}
-
-bool Avatar::getDamaged(){
-    decHealth(2);
-    if(getHealth() <= 0){
-        setDead();
-        getWorld()->decLives();
-        getWorld()->playSound(SOUND_PLAYER_DIE);
-    }
-    else
-        getWorld()->playSound(SOUND_PLAYER_IMPACT);
-    return true;
-}
-
-// MARK: WALL
-Wall::Wall(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_WALL, startX, startY, none, -1, wrld) {
-}
-
-// MARK: MARBLE
-Marble::Marble(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_MARBLE, startX, startY, none, 10, wrld){
-}
-
-void Marble::doSomething(){
-}
-
-bool Marble::getDamaged(){
-    decHealth(2);
-    if(getHealth() <= 0)
-        setDead();
-    return true;
-}
-
-bool Marble::push(int dir){
-    int newX = getX();
-    int newY = getY();
-    getNewCoordinates(newX, newY, dir);
-    if(getWorld()->emptySpace(newX, newY) || !(getWorld()->actorAt(newX, newY))->blocksMovement()){
-        moveTo(newX, newY);
+bool Agent::moveIfPossible(){
+    int dx, dy;
+    getDxDy(dx, dy);
+    if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy)){
+        moveTo(getX() + dx, getY() + dy);
         return true;
     }
     return false;
 }
 
-// MARK: PIT
-Pit::Pit(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_PIT, startX, startY, none, -1, wrld) {
+// MARK: Player
+Player::Player(StudentWorld* world, int startX, int startY)
+: Agent(world, startX, startY, IID_PLAYER, 20, right), ammo(20){
+}
+
+void Player::doSomething(){
+    int ch;
+    if (getWorld()->getKey(ch)) {
+        switch(ch) {
+            case KEY_PRESS_SPACE:
+                if(ammo > 0){
+                    ammo--;
+                    int dx, dy;
+                    getDxDy(dx, dy);
+                    getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
+                    getWorld()->playSound(SOUND_PLAYER_FIRE);
+                }
+                break;
+            case KEY_PRESS_RIGHT:
+                setDirection(right);
+                moveIfPossible();
+                break;
+            case KEY_PRESS_LEFT:
+                setDirection(left);
+                moveIfPossible();
+                break;
+            case KEY_PRESS_UP:
+                setDirection(up);
+                moveIfPossible();
+                break;
+            case KEY_PRESS_DOWN:
+                setDirection(down);
+                moveIfPossible();
+                break;
+        }
+    }
+}
+
+void Player::damage(int damageAmt){
+    decHitPoints(damageAmt);
+    if(getHitPoints() <= 0){
+        setDead();
+        getWorld()->decLives();
+        getWorld()->playSound(SOUND_PLAYER_DIE);
+    }
+}
+
+// MARK: Wall
+Wall::Wall(StudentWorld* world, int startX, int startY)
+: Actor(world, startX, startY, IID_WALL, 0, none){
+}
+
+// MARK: Marble
+Marble::Marble(StudentWorld* world, int startX, int startY)
+: Actor(world, startX, startY, IID_MARBLE, 10, none){
+}
+
+bool Marble::bePushedBy(Agent* a, int x, int y){
+    if(a->canPushMarbles() && getWorld()->canMarbleMoveTo(x, y)){
+        moveTo(x, y);
+        return true;
+    }
+    return false;
+}
+
+void Marble::damage(int damageAmt){
+    decHitPoints(damageAmt);
+    if(getHitPoints() <= 0)
+        setDead();
+}
+
+// MARK: Pit
+Pit::Pit(StudentWorld* world, int startX, int startY)
+: Actor(world, startX, startY, IID_PIT, 0, none){
 }
 
 void Pit::doSomething(){
     if(!isAlive())
         return;
-    Actor* obj = getWorld()->actorAtSamePlace(this);
-    if(obj != nullptr && obj->canBePushed()){
-        obj->setDead();
+    if(getWorld()->swallowSwallowable(this))
         setDead();
-    }
 }
 
-// MARK: PEA
-Pea::Pea(int startX, int startY, int startDir, StudentWorld* wrld)
-: Actor(IID_PEA, startX, startY, startDir, -1, wrld), moved(false){
+// MARK: Pea
+Pea::Pea(StudentWorld* world, int startX, int startY, int startDir)
+: Actor(world, startX, startY, IID_PEA, 0, startDir){
 }
 
 void Pea::doSomething(){
     if(moved){
         if(!isAlive())
             return;
-        
-        if(getWorld()->doSomethingToActorsHitByPea(this))
+        if(getWorld()->damageSomething(this, 2)){
+            setDead();
             return;
+        }
         
         // move 1 in the specified direction
-        int newX = getX();
-        int newY = getY();
-        getNewCoordinates(newX, newY, getDirection());
-        moveTo(newX, newY);
+        int dx, dy;
+        getDxDy(dx, dy);
+        moveTo(getX() + dx, getY() + dy);
         
         // check new square
-        getWorld()->doSomethingToActorsHitByPea(this);
+        if(getWorld()->damageSomething(this, 2))
+            setDead();
     }
-    moved = true;
+    else
+        moved = true;
 }
 
-//MARK: RAGE BOT
-RageBot::RageBot(int startX, int startY, int startDir, StudentWorld* wrld)
-: Actor(IID_RAGEBOT, startX, startY, startDir, 10, wrld), currTick(1){
+// MARK: Robot
+Robot::Robot(StudentWorld* world, int startX, int startY, int imageID, int hitPoints, int score, int startDir)
+: Agent(world, startX, startY, imageID, hitPoints, startDir), currTick(1){
     ticks = (28 - getWorld()->getLevel()) / 4;
     if (ticks < 3)
         ticks = 3;
+    cerr << ticks << endl;
+}
+
+void Robot::damage(int damageAmt){
+    decHitPoints(damageAmt);
+    if(getHitPoints() <= 0){
+        setDead();
+        getWorld()->increaseScore(100);
+        getWorld()->playSound(SOUND_ROBOT_DIE);
+    }
+    else
+        getWorld()->playSound(SOUND_ROBOT_IMPACT);
+}
+
+bool Robot::rest(){
+    if(currTick == ticks){
+        currTick = 1; // reset ticks
+        return false;
+    }
+    else{
+        currTick++;
+        return true;
+    }
+}
+
+// MARK: RageBot
+RageBot::RageBot(StudentWorld* world, int startX, int startY, int startDir)
+// TODO: what to do with robot score?
+: Robot(world, startX, startY, IID_RAGEBOT, 10, -1, startDir) {
 }
 
 void RageBot::doSomething(){
     if(!isAlive())
         return;
-    if(currTick == ticks){
-        if((getWorld()->getPlayer()->getX() == getX() || getWorld()->getPlayer()->getY() == getY()) && facingPlayer() && !getWorld()->obstaclesBetweenActorAndPlayer(this)){
-            shootPea();
+    if(!rest()){
+        int dx, dy;
+        getDxDy(dx, dy);
+        if(getWorld()->existsClearShotToPlayer(getX(), getY(), dx, dy)){
+            getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
             getWorld()->playSound(SOUND_ENEMY_FIRE);
         }
-        else{
-            int newX = getX();
-            int newY = getY();
-            getNewCoordinates(newX, newY, getDirection());
-            if(!getWorld()->obstacleAt(newX, newY))
-                moveTo(newX, newY);
+        else {
+            if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy))
+                moveTo(getX() + dx, getY() + dy);
             else{
                 if(getDirection() == right)
                     setDirection(left);
@@ -184,51 +208,5 @@ void RageBot::doSomething(){
                     setDirection(up);
             }
         }
-        currTick = 1;
-    }
-    else
-        currTick++;
-}
-
-bool RageBot::facingPlayer(){
-    int playerX = getWorld()->getPlayer()->getX();
-    int playerY = getWorld()->getPlayer()->getY();
-    if(getDirection() == right && getY() == playerY && getX() < playerX)
-        return true;
-    if(getDirection() == left && getY() == playerY && getX() > playerX)
-        return true;
-    if(getDirection() == up && getX() == playerX && getY() < playerY)
-        return true;
-    if(getDirection() == down && getX() == playerX && getY() > playerY)
-        return true;
-    return false;
-}
-
-bool RageBot::getDamaged(){
-    decHealth(2);
-    if(getHealth() <= 0){
-        setDead();
-        getWorld()->increaseScore(100);
-        getWorld()->playSound(SOUND_ROBOT_DIE);
-    }
-    else{
-        getWorld()->playSound(SOUND_ROBOT_IMPACT);
-    }
-    return true;
-}
-
-//MARK: CRYSTAL
-Crystal::Crystal(int startX, int startY, StudentWorld* wrld)
-: Actor(IID_CRYSTAL, startX, startY, none, -1, wrld) {
-}
-
-void Crystal::doSomething(){
-    if(!isAlive())
-        return;
-    if(getWorld()->getPlayer()->getX() == getX() && getWorld()->getPlayer()->getY()==getY()){
-        getWorld()->increaseScore(50);
-        setDead();
-        getWorld()->playSound(SOUND_GOT_GOODIE);
     }
 }
-

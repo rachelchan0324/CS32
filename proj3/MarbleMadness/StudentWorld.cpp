@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream> // defines the overloads of the << operator
 #include <sstream>  // defines the type std::ostringstream
+
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath) {
@@ -11,11 +12,20 @@ GameWorld* createStudentWorld(string assetPath) {
 }
 
 StudentWorld::StudentWorld(string assetPath)
-: GameWorld(assetPath), m_player(nullptr), bonus(1000){
+: GameWorld(assetPath), m_player(nullptr) {
 }
 
 StudentWorld::~StudentWorld(){
     cleanUp();
+}
+
+void StudentWorld::cleanUp(){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        delete *it;
+        *it = nullptr;
+        it++;
+    }
 }
 
 int StudentWorld::init() {
@@ -33,28 +43,30 @@ int StudentWorld::init() {
         for(int c = 0; c < VIEW_WIDTH; c++){
             Level::MazeEntry item = lev.getContentsOf(c, r);
             if(item == Level::player){
-                m_player = new Avatar(c, r, this);
-                actors.push_back(m_player);
+                m_player = new Player(this, c, r);
+                addActor(m_player);
             }
             else if(item == Level::wall)
-                actors.push_back(new Wall(c, r, this));
+                addActor(new Wall(this, c, r));
             else if(item == Level::marble)
-                actors.push_back(new Marble(c, r, this));
+                addActor(new Marble(this, c, r));
             else if(item == Level::pit)
-                actors.push_back(new Pit(c, r, this));
+                addActor(new Pit(this, c, r));
             else if(item == Level::horiz_ragebot)
-                actors.push_back(new RageBot(c, r, Actor::right, this));
+                addActor(new RageBot(this, c, r, Actor::right));
             else if(item == Level::vert_ragebot)
-                actors.push_back(new RageBot(c, r, Actor::down, this));
-            else if(item == Level::crystal)
-                actors.push_back(new Crystal(c, r, this));
+                addActor(new RageBot(this, c, r, Actor::down));
+//            else if(item == Level::crystal)
+//                addActor(new Crystal(this, c, r));
         }
     }
     return GWSTATUS_CONTINUE_GAME;
 }
 
-int StudentWorld::move() {
+int StudentWorld::move(){
     setGameStatText("Game will end when you type q");
+    
+    // ask all actors to do something during the tick
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         (*it)->doSomething();
@@ -62,141 +74,130 @@ int StudentWorld::move() {
             return GWSTATUS_PLAYER_DIED;
         it++;
     }
+    
+    // remove dead actors
     it = actors.begin();
     while(it != actors.end()){
         if(!(*it)->isAlive()){
-            delete *it; // remove object
-            *it = nullptr; // not necessary
-            it = actors.erase(it); // remove from the list
+            delete *it;
+            *it = nullptr;
+            it = actors.erase(it);
         }
         else
             it++;
     }
-    setGameStatText(getStatusLine());
-    if(bonus > 0)
-        bonus--;
+    
     return GWSTATUS_CONTINUE_GAME;
 }
 
-string StudentWorld::getStatusLine() const{
-    int score = getScore();
-    int level = getLevel();
-    int lives = getLives();
-    int healthPercent = m_player->getHealth() * 5;
-    int ammo = m_player->getPeas();
-    int bonus = getBonus();
-    
-    ostringstream oss;
-    oss.setf(ios::fixed);
-    oss.fill('0');
-    oss << "Score: " << setw(7) << score << "  Level: " << setw(2) << level;
-    oss.fill(' ');
-    oss << "  Lives: " << setw(2) << lives << "  Health: " << setw(3) << healthPercent << "%" << "  Ammo: " << setw(3) << ammo << "  Bonus: " << setw(4) << bonus;
-    return oss.str();
+void StudentWorld::addActor(Actor* a){
+    actors.push_back(a);
 }
 
-bool StudentWorld::emptySpace(int x, int y) const{
+bool StudentWorld::canAgentMoveTo(Agent* agent, int x, int y, int dx, int dy) const{
     list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y)
+        if((*it)->getX() == x && (*it)->getY() == y && !(*it)->allowsAgentColocation()){
+            // TODO: should i return true immediately? what other objects can be on a marble?
+            if((*it)->bePushedBy(agent, x + dx, y + dy)) // exception: marble can be pushed away
+                return true;
+            else
+                return false;
+        }
+        it++;
+    }
+    return true;
+}
+
+bool StudentWorld::canMarbleMoveTo(int x, int y) const{
+    list<Actor*>::const_iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == x && (*it)->getY() == y && !(*it)->allowsMarbleColocation())
             return false;
         it++;
     }
     return true;
 }
 
-Actor* StudentWorld::actorAt(int x, int y) const{
-    list<Actor*>::const_iterator it = actors.begin();
-    while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y)
-            return *it;
-        it++;
-    }
-    return nullptr;
-}
-
-Actor* StudentWorld::actorAtSamePlace(Actor* ptr) const{
-    list<Actor*>::const_iterator it = actors.begin();
-    while(it != actors.end()){
-        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it) != ptr)
-            return *it;
-        it++;
-    }
-    return nullptr;
-}
-
-// returns a boolean telling whether or not the pea dies
-bool StudentWorld::doSomethingToActorsHitByPea(Actor* ptr){
+bool StudentWorld::swallowSwallowable(Actor* a){
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
-        // damage all actors that CAN be damaged
-        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it) != ptr && (*it)->getDamaged()){
-            ptr->setDead();
-            return true;
-        }
-        // if it hits a wall
-        if((*it)->getX() == ptr->getX() && (*it)->getY() == ptr->getY() && (*it)->blocksMovement()){
-            ptr->setDead();
-            return true;
+        if((*it)->getX() == a->getX() && (*it)->getY() == a->getY() && *it != a){
+            if((*it)->isSwallowable()){
+                (*it)->setDead(); // set swallowable object to dead
+                return true;
+            }
         }
         it++;
     }
     return false;
 }
 
-bool StudentWorld::obstaclesBetweenActorAndPlayer(Actor* ptr) const{
-    // find range between actor and player
-    int startX, endX, startY, endY;
-    if(ptr->getDirection() == Actor::right){
-        startY = endY = ptr->getY();
-        startX = ptr->getX() + 1;
-        endX = getPlayer()->getX() - 1;
+bool StudentWorld::damageSomething(Actor* a, int damageAmt){
+    list<Actor*>::iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == a->getX() && (*it)->getY() == a->getY() && *it != a){
+            if((*it)->isDamageable()){
+                (*it)->damage(damageAmt);
+                return true;
+            }
+            if((*it)->stopsPea()){
+                return true;
+            }
+        }
+        it++;
     }
-    else if(ptr->getDirection() == Actor::left){
-        startY = endY = ptr->getY();
-        startX = getPlayer()->getX() + 1;
-        endX = ptr->getX() - 1;
+    return false;
+}
+
+bool StudentWorld::existsClearShotToPlayer(int x, int y, int dx, int dy) const{
+    if(x != m_player->getX() && y != m_player->getY())
+        return false; // not in same column or row
+    
+    // establish range between actor and player
+    int startX, startY, endX, endY;
+    startX = endX = x;
+    startY = endY = y;
+    
+    if(dx == 1 && dy == 0) {
+        if(x > m_player->getX() || x == m_player->getX()) // facing right BUT player is to the left OR not same x
+           return false;
+        if(x + 1 == m_player->getX())
+            // TODO: return true if the actor is right next to player BUT what if there is something on player's spot as well?
+            return true;
+        startX++;
+        endX = m_player->getX() - 1;
     }
-    else if(ptr->getDirection() == Actor::up){
-        startX = endX = ptr->getX();
-        startY = ptr->getY() + 1;
-        endY = getPlayer()->getY() - 1;
+    else if(dx == -1 && dy == 0){
+        if(x < m_player->getX()  || x == m_player->getX())
+            return false; // facing left BUT player is to the right OR not same x
+        if(x - 1 == m_player->getX())
+            return true;
+        endX--;
+        startX = m_player->getX() + 1;
+    }
+    else if(dx == 0 && dy == 1){
+       if(y > m_player->getY() || y == m_player->getY()) // facing up BUT player is south OR not same y
+           return false;
+        if(y + 1 == m_player->getY())
+            return true;
+        startY++;
+        endY = m_player->getY() - 1;
     }
     else{
-        startX = endX = ptr->getX();
-        startY = getPlayer()->getY() + 1;
-        endY = ptr->getY() - 1;
+        if(y < m_player->getY() || y == m_player->getX()) // facing down BUT player is north OR not same y
+            return false;
+        if(y - 1 == m_player->getY())
+            return true;
+        endY--;
+        startY = m_player->getY() + 1;
     }
     
-    // check to see if any actors in that range block movement
     list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->blocksMovement())
-            return true;
+        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->stopsPea())
+            return false;
         it++;
     }
-    return false;
-}
-
-bool StudentWorld::obstacleAt(int x, int y) const{
-    list<Actor*>::const_iterator it = actors.begin();
-    while(it != actors.end()){
-        if((*it)->getX() == x && (*it)->getY() == y && (*it)->blocksMovement())
-            return true;
-        it++;
-    }
-    return false;
-}
-
-void StudentWorld::addPea(int x, int y, int dir){
-    actors.push_back(new Pea(x, y, dir, this));
-}
-
-void StudentWorld::cleanUp(){
-    list<Actor*>::iterator it = actors.begin();
-    while(it != actors.end()){
-        delete *it;
-        *it = nullptr;
-        it++;
-    }
+    return true;
 }
