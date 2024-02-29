@@ -12,7 +12,7 @@ GameWorld* createStudentWorld(string assetPath) {
 }
 
 StudentWorld::StudentWorld(string assetPath)
-: GameWorld(assetPath), m_player(nullptr) {
+: GameWorld(assetPath), m_player(nullptr), bonus(1000), levelFinished(false){
 }
 
 StudentWorld::~StudentWorld(){
@@ -23,15 +23,14 @@ void StudentWorld::cleanUp(){
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         delete *it;
-        *it = nullptr;
-        it++;
+        it = actors.erase(it);
     }
 }
 
 int StudentWorld::init() {
     string levelStr = to_string(getLevel());
     if(getLevel() < 10)
-        levelStr += "0";
+        levelStr = "0" + levelStr;
     string levelFilename = "level" + levelStr + ".txt";
     Level lev(assetPath());
     
@@ -56,20 +55,30 @@ int StudentWorld::init() {
                 addActor(new RageBot(this, c, r, Actor::right));
             else if(item == Level::vert_ragebot)
                 addActor(new RageBot(this, c, r, Actor::down));
-//            else if(item == Level::crystal)
-//                addActor(new Crystal(this, c, r));
+            else if(item == Level::crystal){
+                addActor(new Crystal(this, c, r));
+                crystals++;
+            }
+            else if(item == Level::exit)
+                addActor(new Exit(this, c, r));
+            else if(item == Level::ammo)
+                addActor(new AmmoGoodie(this, c, r));
         }
     }
+    cout << "init" << endl;
     return GWSTATUS_CONTINUE_GAME;
 }
 
 int StudentWorld::move(){
-    setGameStatText("Game will end when you type q");
-    
-    // ask all actors to do something during the tick
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         (*it)->doSomething();
+        if(levelFinished){
+            increaseScore(bonus);
+            bonus = crystals = 0;
+            levelFinished = false;
+            return GWSTATUS_FINISHED_LEVEL;
+        }
         if(!m_player->isAlive())
             return GWSTATUS_PLAYER_DIED;
         it++;
@@ -86,6 +95,18 @@ int StudentWorld::move(){
         else
             it++;
     }
+    
+    if(bonus > 0)
+        bonus--;
+    
+    // game stats
+    ostringstream oss;
+    oss.setf(ios::fixed);
+    oss.fill('0');
+    oss << "Score: " << setw(7) << getScore() << "  Level: " << setw(2) << getLevel();
+    oss.fill(' ');
+    oss << "  Lives: " << setw(2) << getLives() << "  Health: " << setw(3) << m_player->getHealthPct() << "%" << "  Ammo: " << setw(3) << m_player->getAmmo() << "  Bonus: " << setw(4) << bonus;
+    setGameStatText(oss.str());
     
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -141,9 +162,8 @@ bool StudentWorld::damageSomething(Actor* a, int damageAmt){
                 (*it)->damage(damageAmt);
                 return true;
             }
-            if((*it)->stopsPea()){
+            if((*it)->stopsPea())
                 return true;
-            }
         }
         it++;
     }
@@ -151,53 +171,56 @@ bool StudentWorld::damageSomething(Actor* a, int damageAmt){
 }
 
 bool StudentWorld::existsClearShotToPlayer(int x, int y, int dx, int dy) const{
+    // player on the same square as the pea
+    if(x == m_player->getX() && y == m_player->getY()){
+        list<Actor*>::const_iterator it = actors.begin();
+        while(it != actors.end()){
+            if((*it)->getX() == x && (*it)->getY() == y && (*it)->stopsPea() && (*it) != m_player)
+                return false;
+            it++;
+        }
+        return true;
+    }
+    
     if(x != m_player->getX() && y != m_player->getY())
         return false; // not in same column or row
     
-    // establish range between actor and player
+    // establish range between pea and player
     int startX, startY, endX, endY;
     startX = endX = x;
     startY = endY = y;
     
-    if(dx == 1 && dy == 0) {
+    // checks if currently facing the player
+    if(dx == 1 && dy == 0) { // facing right
         if(x > m_player->getX() || x == m_player->getX()) // facing right BUT player is to the left OR not same x
            return false;
-        if(x + 1 == m_player->getX())
-            // TODO: return true if the actor is right next to player BUT what if there is something on player's spot as well?
-            return true;
-        startX++;
-        endX = m_player->getX() - 1;
+        endX = m_player->getX();
     }
-    else if(dx == -1 && dy == 0){
+    else if(dx == -1 && dy == 0){ // facing left
         if(x < m_player->getX()  || x == m_player->getX())
             return false; // facing left BUT player is to the right OR not same x
-        if(x - 1 == m_player->getX())
-            return true;
-        endX--;
-        startX = m_player->getX() + 1;
+        startX = m_player->getX();
     }
     else if(dx == 0 && dy == 1){
-       if(y > m_player->getY() || y == m_player->getY()) // facing up BUT player is south OR not same y
+        if(y > m_player->getY() || y == m_player->getY()) // facing up BUT player is south OR not same y
            return false;
-        if(y + 1 == m_player->getY())
-            return true;
-        startY++;
-        endY = m_player->getY() - 1;
+        endY = m_player->getY();
     }
     else{
         if(y < m_player->getY() || y == m_player->getX()) // facing down BUT player is north OR not same y
             return false;
-        if(y - 1 == m_player->getY())
-            return true;
-        endY--;
-        startY = m_player->getY() + 1;
+        startY = m_player->getY();
     }
     
     list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->stopsPea())
+        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->stopsPea() && (*it) != m_player)
             return false;
         it++;
     }
     return true;
+}
+
+bool StudentWorld::isPlayerColocatedWith(int x, int y) const{
+    return m_player->getX() == x && m_player->getY() == y;
 }

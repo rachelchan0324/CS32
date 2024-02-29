@@ -33,15 +33,11 @@ public:
     
     bool canAgentMoveTo(Agent* agent, int x, int y, int dx, int dy) const;
     bool canMarbleMoveTo(int x, int y) const;
-    
-    // Is the player on the same square as an Actor?
-    // bool isPlayerColocatedWith(int x, int y) const;
+    bool isPlayerColocatedWith(int x, int y) const;
     
     bool damageSomething(Actor* a, int damageAmt);
     bool swallowSwallowable(Actor* a);
     
-    // If a pea were at x,y moving in direction dx,dy, could it hit the
-    // player without encountering any obstructions?
     bool existsClearShotToPlayer(int x, int y, int dx, int dy) const;
     
     // If a factory is at x,y, how many items of the type that should be
@@ -60,24 +56,21 @@ public:
     // Restore player's health to the full amount.
     // void restorePlayerHealth();
     
-    // Increase the amount of ammunition the player has
-    // void increaseAmmo();
+    void increaseAmmo() {m_player->increaseAmmo();}
+    bool anyCrystals() const {return crystals > 0;}
+    // TODO: made this non-const and void
+    void decCrystals() {crystals--;}
     
-    // Are there any crystals left on this level?
-    //bool anyCrystals() const;
-    
-    // Reduce the count of crystals on this level by 1.
-    // bool decCrystals() const;
-    
-    // Indicate that the player has finished the level.
-    // void setLevelFinished();
-    
-    // Add an actor to the world
+    void setLevelFinished() {levelFinished = true;}
     void addActor(Actor* a);
     
 private:
     list <Actor*> actors;
     Player* m_player;
+    
+    int bonus;
+    int crystals;
+    bool levelFinished;
 };
 
 #endif // STUDENTWORLD_H_

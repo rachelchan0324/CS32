@@ -149,18 +149,17 @@ void Pea::doSomething(){
 
 // MARK: Robot
 Robot::Robot(StudentWorld* world, int startX, int startY, int imageID, int hitPoints, int score, int startDir)
-: Agent(world, startX, startY, imageID, hitPoints, startDir), currTick(1){
+: Agent(world, startX, startY, imageID, hitPoints, startDir), currTick(1), score(score){
     ticks = (28 - getWorld()->getLevel()) / 4;
     if (ticks < 3)
         ticks = 3;
-    cerr << ticks << endl;
 }
 
 void Robot::damage(int damageAmt){
     decHitPoints(damageAmt);
     if(getHitPoints() <= 0){
         setDead();
-        getWorld()->increaseScore(100);
+        getWorld()->increaseScore(score);
         getWorld()->playSound(SOUND_ROBOT_DIE);
     }
     else
@@ -181,7 +180,7 @@ bool Robot::rest(){
 // MARK: RageBot
 RageBot::RageBot(StudentWorld* world, int startX, int startY, int startDir)
 // TODO: what to do with robot score?
-: Robot(world, startX, startY, IID_RAGEBOT, 10, -1, startDir) {
+: Robot(world, startX, startY, IID_RAGEBOT, 10, 100, startDir) {
 }
 
 void RageBot::doSomething(){
@@ -190,7 +189,7 @@ void RageBot::doSomething(){
     if(!rest()){
         int dx, dy;
         getDxDy(dx, dy);
-        if(getWorld()->existsClearShotToPlayer(getX(), getY(), dx, dy)){
+        if(getWorld()->existsClearShotToPlayer(getX() + dx, getY() + dy, dx, dy)){ // check if pea has clear shot to player
             getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
             getWorld()->playSound(SOUND_ENEMY_FIRE);
         }
@@ -209,4 +208,69 @@ void RageBot::doSomething(){
             }
         }
     }
+}
+
+// MARK: Pickupable Item
+PickupableItem::PickupableItem(StudentWorld* world, int startX, int startY, int imageID, int score)
+: Actor(world, startX, startY, imageID, 0, none), score(score){
+}
+
+void PickupableItem::doSomething(){
+    if(!isAlive())
+        return;
+    if(getWorld()->isPlayerColocatedWith(getX(), getY())){
+        doSpecificPickableItemStuff();
+        getWorld()->increaseScore(score);
+        setDead();
+        getWorld()->playSound(SOUND_GOT_GOODIE);
+    }
+}
+
+// MARK: Crystal
+Crystal::Crystal(StudentWorld* world, int startX, int startY)
+: PickupableItem(world, startX, startY, IID_CRYSTAL, 50){
+}
+
+void Crystal::doSpecificPickableItemStuff(){
+    getWorld()->decCrystals();
+}
+
+// MARK: Exit
+Exit::Exit(StudentWorld* world, int startX, int startY)
+: Actor(world, startX, startY, IID_EXIT, 0, none), revealed(false){
+    setVisible(false);
+}
+
+void Exit::doSomething(){
+    if(!revealed && !getWorld()->anyCrystals()){
+        setVisible(true);
+        getWorld()->playSound(SOUND_REVEAL_EXIT);
+        revealed = true;
+    }
+    if(revealed && getWorld()->isPlayerColocatedWith(getX(), getY())){
+        getWorld()->playSound(SOUND_FINISHED_LEVEL);
+        getWorld()->increaseScore(2000);
+        getWorld()->setLevelFinished();
+    }
+}
+
+// MARK: Goodie
+Goodie::Goodie(StudentWorld* world, int startX, int startY, int imageID, int score)
+: PickupableItem(world, startX, startY, imageID, score){
+}
+
+void Goodie::doSomething(){
+    PickupableItem::doSomething();
+    if(getWorld()->isPlayerColocatedWith(getX(), getY()))
+       doGoodieSpecificStuff();
+}
+
+// MARK: Ammo Goodie
+AmmoGoodie::AmmoGoodie(StudentWorld* world, int startX, int startY)
+: Goodie(world, startX, startY, IID_AMMO, 100){
+}
+
+void AmmoGoodie::doGoodieSpecificStuff(){
+    for(int i = 0; i < 20; i++)
+        getWorld()->increaseAmmo();
 }

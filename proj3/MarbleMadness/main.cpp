@@ -11,7 +11,7 @@ using namespace std;
   // e.g., "Z:/CS32/MarbleMadness/Assets" or "/Users/fred/cs32/MarbleMadness/Assets"
 
 const string assetDirectory = "/Users/rachel/Desktop/CS32/proj3/DerivedData/MarbleMadness/Build/Products/Debug/Assets/";
-const int msPerTick = 50;  // 10ms per tick; increase this if game moves too fast
+const int msPerTick = 10;  // 10ms per tick; increase this if game moves too fast
 
 #ifdef _MSC_VER
 #include <windows.h>
