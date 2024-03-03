@@ -14,14 +14,6 @@ class Actor;
 class Agent;
 class Player;
 
-// Note:  A convention used in a number of interfaces is to represent a
-// direction with the adjustments to x and y needed to move one step in
-// that direction:
-// left:   dx is -1, dy is  0
-// right:  dx is  1, dy is  0
-// up:     dx is  0, dy is  1
-// down:   dx is  0, dy is -1
-
 class StudentWorld : public GameWorld {
 public:
     StudentWorld(std::string assetDir);

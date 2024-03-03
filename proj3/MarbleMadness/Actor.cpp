@@ -200,13 +200,14 @@ void RageBot::doSomething(){
     if(!isAlive())
         return;
     if(!rest()){
+        // attempt to shoot at player
         int dx, dy;
         getDxDy(dx, dy);
         if(getWorld()->existsClearShotToPlayer(getX() + dx, getY() + dy, dx, dy)){ // check if pea has clear shot to player
             getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
             getWorld()->playSound(SOUND_ENEMY_FIRE);
         }
-        else {
+        else { // if rage bot can't shoot at player, then move
             if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy))
                 moveTo(getX() + dx, getY() + dy);
             else{
@@ -229,60 +230,60 @@ ThiefBot::ThiefBot(StudentWorld* world, int startX, int startY, int imageID, int
 }
 
 void ThiefBot::doSomething(){
-    if(!isAlive())
+    if(!hasGoodie && getWorld()->getColocatedStealable(getX(), getY()) != nullptr && randInt(1, 10) == 1){
+        goodie = getWorld()->getColocatedStealable(getX(), getY()); // must be a goodie
+        goodie->setStolen(true);
+        hasGoodie = true;
+        getWorld()->playSound(SOUND_ROBOT_MUNCH);
         return;
-    if(!rest()){
-        if(!hasGoodie && getWorld()->getColocatedStealable(getX(), getY()) != nullptr && randInt(1, 10) == 1){
-            goodie = getWorld()->getColocatedStealable(getX(), getY()); // must be a goodie
-            goodie->setStolen(true);
-            hasGoodie = true;
-            getWorld()->playSound(SOUND_ROBOT_MUNCH);
-            return;
-        }
-        if(stepsInCurrentDirection < distanceBeforeTurning){
-            int dx, dy;
-            getDxDy(dx, dy);
-            if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy))
-                moveTo(getX() + dx, getY() + dy);
-            stepsInCurrentDirection++;
-            return;
-        }
-        distanceBeforeTurning = randInt(1, 6);
-        // at this point, the current path has an obstruction or the thief bot has reached max steps in current direction, try to move in a NEW direction
-
-        // first direction
-        int d = randInt(1, 4);
-        
-        int currD = d;
-        for(int i = 0; i < 4; i++){
-            int dx, dy;
-            getDxDyFromRandInt(currD, dx, dy);
-            if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy)){
-                moveTo(getX() + dx, getY() + dy);
-                d = currD;
-                stepsInCurrentDirection++;
-                break;
-            }
-            // switch directions
-            currD++;
-            if(currD > 4)
-                currD = 1;
-        }
-        if(d == 1)
-            setDirection(right);
-        else if(d == 2)
-            setDirection(left);
-        else if(d == 3)
-            setDirection(up);
-        else
-            setDirection(down);
     }
+    if(stepsInCurrentDirection < distanceBeforeTurning){
+        int dx, dy;
+        getDxDy(dx, dy);
+        if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy))
+            moveTo(getX() + dx, getY() + dy);
+        stepsInCurrentDirection++;
+        return;
+    }
+    distanceBeforeTurning = randInt(1, 6);
+    // at this point, the current path has an obstruction or the thief bot has reached max steps in current direction, try to move in a NEW direction
+
+    // first direction
+    int d = randInt(1, 4);
+    
+    int currD = d;
+    for(int i = 0; i < 4; i++){
+        int dx, dy;
+        getDxDyFromRandInt(currD, dx, dy);
+        if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy)){
+            moveTo(getX() + dx, getY() + dy);
+            d = currD;
+            stepsInCurrentDirection++;
+            break;
+        }
+        // switch directions
+        currD++;
+        if(currD > 4)
+            currD = 1;
+    }
+    if(d == 1)
+        setDirection(right);
+    else if(d == 2)
+        setDirection(left);
+    else if(d == 3)
+        setDirection(up);
+    else
+        setDirection(down);
 }
 
 void ThiefBot::damage(int damageAmt){
     Robot::damage(damageAmt);
-    if(getHitPoints() <= 0)
+    if(getHitPoints() <= 0 && hasGoodie){
         goodie->setStolen(false);
+        goodie->moveTo(getX(), getY());
+        hasGoodie = false;
+        goodie = nullptr;
+    }
 }
 
 void ThiefBot::getDxDyFromRandInt(int dir, int& dx, int& dy){
@@ -303,6 +304,14 @@ RegularThiefBot::RegularThiefBot(StudentWorld* world, int startX, int startY)
 : ThiefBot(world, startX, startY, IID_THIEFBOT, 5, 10){
 }
 
+void RegularThiefBot::doSomething(){
+    if(!isAlive())
+        return;
+    if(!rest()){
+        ThiefBot::doSomething();
+    }
+}
+
 // MARK: Mean Thief Bot
 
 MeanThiefBot::MeanThiefBot(StudentWorld* world, int startX, int startY)
@@ -313,12 +322,15 @@ void MeanThiefBot::doSomething(){
     if(!isAlive())
         return;
     if(!rest()){
+        // sees if it can shoot first
         int dx, dy;
         getDxDy(dx, dy);
         if(getWorld()->existsClearShotToPlayer(getX() + dx, getY() + dy, dx, dy)){ // check if pea has clear shot to player
             getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
             getWorld()->playSound(SOUND_ENEMY_FIRE);
+            return;
         }
+        // if not, act as a normal thief bot
         ThiefBot::doSomething();
     }
 }
@@ -336,6 +348,7 @@ void ThiefBotFactory::doSomething(){
             getWorld()->addActor(new RegularThiefBot(getWorld(), getX(), getY()));
         else
             getWorld()->addActor(new MeanThiefBot(getWorld(), getX(), getY()));
+        getWorld()->playSound(SOUND_ROBOT_BORN);
     }
 }
 

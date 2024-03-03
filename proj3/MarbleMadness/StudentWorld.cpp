@@ -29,6 +29,8 @@ void StudentWorld::cleanUp(){
 
 int StudentWorld::init() {
     string levelStr = to_string(getLevel());
+    if(getLevel() == 100)
+        return GWSTATUS_PLAYER_WON;
     if(getLevel() < 10)
         levelStr = "0" + levelStr;
     string levelFilename = "level" + levelStr + ".txt";
@@ -73,7 +75,6 @@ int StudentWorld::init() {
                 addActor(new ThiefBotFactory(this, c, r, ThiefBotFactory::MEAN));
         }
     }
-    cout << "added actors to list" << endl;
     return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -87,8 +88,11 @@ int StudentWorld::move(){
             levelFinished = false;
             return GWSTATUS_FINISHED_LEVEL;
         }
-        if(!m_player->isAlive())
+        if(!m_player->isAlive()){
+            bonus = 1000;
+            crystals = 0;
             return GWSTATUS_PLAYER_DIED;
+        }
         it++;
     }
     
@@ -238,6 +242,7 @@ Actor* StudentWorld::getColocatedStealable(int x, int y) const{
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y && (*it)->isStealable())
             return *it;
+        it++;
     }
     return nullptr;
 }

@@ -97,6 +97,7 @@ private:
 class RegularThiefBot : public ThiefBot {
 public:
     RegularThiefBot(StudentWorld* world, int startX, int startY);
+    virtual void doSomething();
     virtual bool isShootingRobot() const {return false;}
 };
 
