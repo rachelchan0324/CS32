@@ -67,6 +67,10 @@ void Player::doSomething(){
                     getWorld()->playSound(SOUND_PLAYER_FIRE);
                 }
                 break;
+            case KEY_PRESS_ESCAPE:
+                setDead();
+                getWorld()->decLives();
+                break;
             case KEY_PRESS_RIGHT:
                 setDirection(right);
                 moveIfPossible();
@@ -206,21 +210,20 @@ void RageBot::doSomething(){
         if(getWorld()->existsClearShotToPlayer(getX() + dx, getY() + dy, dx, dy)){ // check if pea has clear shot to player
             getWorld()->addActor(new Pea(getWorld(), getX() + dx, getY() + dy, getDirection()));
             getWorld()->playSound(SOUND_ENEMY_FIRE);
+            return;
         }
-        else { // if rage bot can't shoot at player, then move
-            if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy))
-                moveTo(getX() + dx, getY() + dy);
-            else{
-                if(getDirection() == right)
-                    setDirection(left);
-                else if(getDirection() == left)
-                    setDirection(right);
-                else if(getDirection() == up)
-                    setDirection(down);
-                else
-                    setDirection(up);
-            }
+        if(getWorld()->canAgentMoveTo(this, getX() + dx, getY() + dy, dx, dy)){
+            moveTo(getX() + dx, getY() + dy);
+            return;
         }
+        if(getDirection() == right)
+            setDirection(left);
+        else if(getDirection() == left)
+            setDirection(right);
+        else if(getDirection() == up)
+            setDirection(down);
+        else
+            setDirection(up);
     }
 }
 
@@ -230,8 +233,8 @@ ThiefBot::ThiefBot(StudentWorld* world, int startX, int startY, int imageID, int
 }
 
 void ThiefBot::doSomething(){
-    if(!hasGoodie && getWorld()->getColocatedStealable(getX(), getY()) != nullptr && randInt(1, 10) == 1){
-        goodie = getWorld()->getColocatedStealable(getX(), getY()); // must be a goodie
+    if(!hasGoodie && getWorld()->getColocatedStealable(getX(), getY()) != nullptr && !getWorld()->getColocatedStealable(getX(), getY())->isStolen() && randInt(1, 10) == 1){
+        goodie = getWorld()->getColocatedStealable(getX(), getY());
         goodie->setStolen(true);
         hasGoodie = true;
         getWorld()->playSound(SOUND_ROBOT_MUNCH);
@@ -245,6 +248,7 @@ void ThiefBot::doSomething(){
         stepsInCurrentDirection++;
         return;
     }
+    stepsInCurrentDirection = 0;
     distanceBeforeTurning = randInt(1, 6);
     // at this point, the current path has an obstruction or the thief bot has reached max steps in current direction, try to move in a NEW direction
 
@@ -338,7 +342,7 @@ void MeanThiefBot::doSomething(){
 
 // MARK: Thief Bot Factory
 ThiefBotFactory::ThiefBotFactory(StudentWorld* world, int startX, int startY, ProductType type)
-: Actor(world, startX, startY, IID_ROBOT_FACTORY, 0, none), type(type){
+: Actor(world, startX, startY, IID_ROBOT_FACTORY, -1, none), type(type){
 }
 
 void ThiefBotFactory::doSomething(){
@@ -408,8 +412,6 @@ void Goodie::doSomething(){
     }
     setVisible(true);
     PickupableItem::doSomething();
-    if(getWorld()->isPlayerColocatedWith(getX(), getY()))
-       doGoodieSpecificStuff();
 }
 
 // MARK: Extra Life Goodie

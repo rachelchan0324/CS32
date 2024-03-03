@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream> // defines the overloads of the << operator
 #include <sstream>  // defines the type std::ostringstream
+#include <iomanip> // defines the manipulator setw
 
 using namespace std;
 
@@ -37,8 +38,10 @@ int StudentWorld::init() {
     Level lev(assetPath());
     
     Level::LoadResult result = lev.loadLevel(levelFilename);
-    if (result == Level::load_fail_file_not_found || result == Level:: load_fail_bad_format)
+    if (result == Level:: load_fail_bad_format)
         return GWSTATUS_LEVEL_ERROR;
+    if(result == Level::load_fail_file_not_found || getLevel() == 100)
+        return GWSTATUS_PLAYER_WON;
     
     for(int r = 0; r < VIEW_HEIGHT; r++){
         for(int c = 0; c < VIEW_WIDTH; c++){
@@ -79,19 +82,28 @@ int StudentWorld::init() {
 }
 
 int StudentWorld::move(){
+    // game stats
+    ostringstream oss;
+    oss.setf(ios::fixed);
+    oss.fill('0');
+    oss << "Score: " << setw(7) << getScore() << "  Level: " << setw(2) << getLevel();
+    oss.fill(' ');
+    oss << "  Lives: " << setw(2) << getLives() << "  Health: " << setw(3) << m_player->getHealthPct() << "%" << "  Ammo: " << setw(3) << m_player->getAmmo() << "  Bonus: " << setw(4) << bonus;
+    setGameStatText(oss.str());
+    
     list<Actor*>::iterator it = actors.begin();
     while(it != actors.end()){
         (*it)->doSomething();
+        if(!m_player->isAlive()){
+            bonus = 1000;
+            crystals = 0;
+            return GWSTATUS_PLAYER_DIED;
+        }
         if(levelFinished){
             increaseScore(bonus);
             bonus = 1000;
             levelFinished = false;
             return GWSTATUS_FINISHED_LEVEL;
-        }
-        if(!m_player->isAlive()){
-            bonus = 1000;
-            crystals = 0;
-            return GWSTATUS_PLAYER_DIED;
         }
         it++;
     }
@@ -111,14 +123,17 @@ int StudentWorld::move(){
     if(bonus > 0)
         bonus--;
     
-    // game stats
-    ostringstream oss;
-    oss.setf(ios::fixed);
-    oss.fill('0');
-    oss << "Score: " << setw(7) << getScore() << "  Level: " << setw(2) << getLevel();
-    oss.fill(' ');
-    oss << "  Lives: " << setw(2) << getLives() << "  Health: " << setw(3) << m_player->getHealthPct() << "%" << "  Ammo: " << setw(3) << m_player->getAmmo() << "  Bonus: " << setw(4) << bonus;
-    setGameStatText(oss.str());
+    if(!m_player->isAlive()){
+        bonus = 1000;
+        crystals = 0;
+        return GWSTATUS_PLAYER_DIED;
+    }
+    if(levelFinished){
+        increaseScore(bonus);
+        bonus = 1000;
+        levelFinished = false;
+        return GWSTATUS_FINISHED_LEVEL;
+    }
     
     return GWSTATUS_CONTINUE_GAME;
 }

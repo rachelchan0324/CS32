@@ -30,6 +30,7 @@ public:
     virtual int getHitPoints() const {return hitPoints;}
     virtual void setHitPoints(int amt) {hitPoints = amt;}
     virtual void setStolen(bool b) {};
+    virtual bool isStolen() {return true;}
     
     int randInt(int min, int max);
 private:
@@ -182,7 +183,8 @@ public:
     Goodie(StudentWorld* world, int startX, int startY, int imageID, int score);
     virtual void doSomething();
     virtual bool isStealable() const {return true;}
-    void setStolen(bool status) {stolen = status;}
+    virtual void setStolen(bool status) {stolen = status;}
+    virtual bool isStolen() {return stolen;}
 private:
     virtual void doGoodieSpecificStuff() = 0;
     virtual void doSpecificPickableItemStuff() {doGoodieSpecificStuff();}
