@@ -39,26 +39,14 @@ public:
     bool swallowSwallowable(Actor* a);
     
     bool existsClearShotToPlayer(int x, int y, int dx, int dy) const;
+    bool doFactoryCensus(int x, int y, int distance, int& count) const;
     
-    // If a factory is at x,y, how many items of the type that should be
-    // counted are in the rectangle bounded by x-distance,y-distance and
-    // x+distance,y+distance?  Set count to that number and return true,
-    // unless an item is on the factory itself, in which case return false
-    // and don't care about count.  (The items counted are only ever going
-    // ThiefBots.)
-    // bool doFactoryCensus(int x, int y, int distance, int& count) const;
+    Actor* getColocatedStealable(int x, int y) const;
     
-    // If an item that can be stolen is at x,y, return a pointer to it;
-    // otherwise, return a null pointer.  (Stealable items are only ever
-    // going be goodies.)
-    // Actor* getColocatedStealable(int x, int y) const;
-    
-    // Restore player's health to the full amount.
-    // void restorePlayerHealth();
+    void restorePlayerHealth() {m_player->restoreHealth();}
     
     void increaseAmmo() {m_player->increaseAmmo();}
     bool anyCrystals() const {return crystals > 0;}
-    // TODO: made this non-const and void
     void decCrystals() {crystals--;}
     
     void setLevelFinished() {levelFinished = true;}

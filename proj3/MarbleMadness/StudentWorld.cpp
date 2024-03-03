@@ -61,11 +61,19 @@ int StudentWorld::init() {
             }
             else if(item == Level::exit)
                 addActor(new Exit(this, c, r));
+            else if(item == Level::extra_life)
+                addActor(new ExtraLifeGoodie(this, c, r));
+            else if(item == Level::restore_health)
+                addActor(new RestoreHealthGoodie(this, c, r));
             else if(item == Level::ammo)
                 addActor(new AmmoGoodie(this, c, r));
+            else if(item == Level::thiefbot_factory)
+                addActor(new ThiefBotFactory(this, c, r, ThiefBotFactory::REGULAR));
+            else if(item == Level::mean_thiefbot_factory)
+                addActor(new ThiefBotFactory(this, c, r, ThiefBotFactory::MEAN));
         }
     }
-    cout << "init" << endl;
+    cout << "added actors to list" << endl;
     return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -75,7 +83,7 @@ int StudentWorld::move(){
         (*it)->doSomething();
         if(levelFinished){
             increaseScore(bonus);
-            bonus = crystals = 0;
+            bonus = 1000;
             levelFinished = false;
             return GWSTATUS_FINISHED_LEVEL;
         }
@@ -119,7 +127,6 @@ bool StudentWorld::canAgentMoveTo(Agent* agent, int x, int y, int dx, int dy) co
     list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
         if((*it)->getX() == x && (*it)->getY() == y && !(*it)->allowsAgentColocation()){
-            // TODO: should i return true immediately? what other objects can be on a marble?
             if((*it)->bePushedBy(agent, x + dx, y + dy)) // exception: marble can be pushed away
                 return true;
             else
@@ -201,20 +208,21 @@ bool StudentWorld::existsClearShotToPlayer(int x, int y, int dx, int dy) const{
             return false; // facing left BUT player is to the right OR not same x
         startX = m_player->getX();
     }
-    else if(dx == 0 && dy == 1){
+    else if(dx == 0 && dy == 1){ // facing up
         if(y > m_player->getY() || y == m_player->getY()) // facing up BUT player is south OR not same y
            return false;
         endY = m_player->getY();
     }
-    else{
-        if(y < m_player->getY() || y == m_player->getX()) // facing down BUT player is north OR not same y
+    else{ // facing down
+        if(y < m_player->getY() || y == m_player->getY()) // facing down BUT player is north OR not same y
             return false;
         startY = m_player->getY();
     }
     
     list<Actor*>::const_iterator it = actors.begin();
     while(it != actors.end()){
-        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && (*it)->stopsPea() && (*it) != m_player)
+        // if the object affects/kills the pea, return false (damages object or stops the pea)
+        if((*it)->getX() >= startX && (*it)->getX() <= endX && (*it)->getY() >= startY && (*it)->getY() <= endY && ((*it)->isDamageable() || (*it)->stopsPea()) && (*it) != m_player)
             return false;
         it++;
     }
@@ -223,4 +231,33 @@ bool StudentWorld::existsClearShotToPlayer(int x, int y, int dx, int dy) const{
 
 bool StudentWorld::isPlayerColocatedWith(int x, int y) const{
     return m_player->getX() == x && m_player->getY() == y;
+}
+
+Actor* StudentWorld::getColocatedStealable(int x, int y) const{
+    list<Actor*>::const_iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() == x && (*it)->getY() == y && (*it)->isStealable())
+            return *it;
+    }
+    return nullptr;
+}
+
+bool StudentWorld::doFactoryCensus(int x, int y, int distance, int& count) const{
+    count = 0;
+    
+    int xStart = x - distance;
+    int xEnd = x + distance;
+    int yStart = y - distance;
+    int yEnd = y + distance;
+    
+    list<Actor*>::const_iterator it = actors.begin();
+    while(it != actors.end()){
+        if((*it)->getX() >= xStart && (*it)->getX() <= xEnd && (*it)->getY() >= yStart && (*it)->getY() <= yEnd && (*it)->countsInFactoryCensus()){
+            if((*it)->getX() == x && (*it)->getY())
+                return false;
+            count++;
+        }
+        it++;
+    }
+    return true;
 }
