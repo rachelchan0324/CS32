@@ -57,9 +57,9 @@ int StudentWorld::init() {
             else if(item == Level::pit)
                 addActor(new Pit(this, c, r));
             else if(item == Level::horiz_ragebot)
-                addActor(new RageBot(this, c, r, Actor::right));
+                addActor(new RageBot(this, c, r, GraphObject::right));
             else if(item == Level::vert_ragebot)
-                addActor(new RageBot(this, c, r, Actor::down));
+                addActor(new RageBot(this, c, r, GraphObject::down));
             else if(item == Level::crystal){
                 addActor(new Crystal(this, c, r));
                 crystals++;
