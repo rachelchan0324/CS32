@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CCA0A34E2B80112D00FE81B3 /* oddlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A34D2B80112D00FE81B3 /* oddlist.cpp */; };
+		CC817EA72B96F30A0064413A /* MapTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC817EA62B96F30A0064413A /* MapTest.cpp */; };
 		CCA0A3552B80184400FE81B3 /* oddvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3542B80184400FE81B3 /* oddvector.cpp */; };
 		CCA0A3572B801D5600FE81B3 /* badlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3562B801D5600FE81B3 /* badlist.cpp */; };
 		CCA0A3592B8022D800FE81B3 /* badvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3582B8022D800FE81B3 /* badvector.cpp */; };
@@ -27,8 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC817EA42B96DF230064413A /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		CC817EA62B96F30A0064413A /* MapTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MapTest.cpp; sourceTree = "<group>"; };
 		CCA0A34A2B80112D00FE81B3 /* hw4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hw4; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCA0A34D2B80112D00FE81B3 /* oddlist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = oddlist.cpp; sourceTree = "<group>"; };
 		CCA0A3542B80184400FE81B3 /* oddvector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = oddvector.cpp; sourceTree = "<group>"; };
 		CCA0A3562B801D5600FE81B3 /* badlist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = badlist.cpp; sourceTree = "<group>"; };
 		CCA0A3582B8022D800FE81B3 /* badvector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = badvector.cpp; sourceTree = "<group>"; };
@@ -65,11 +66,12 @@
 		CCA0A34C2B80112D00FE81B3 /* hw4 */ = {
 			isa = PBXGroup;
 			children = (
-				CCA0A34D2B80112D00FE81B3 /* oddlist.cpp */,
 				CCA0A3542B80184400FE81B3 /* oddvector.cpp */,
 				CCA0A3562B801D5600FE81B3 /* badlist.cpp */,
 				CCA0A3582B8022D800FE81B3 /* badvector.cpp */,
 				CCA0A35A2B8023E500FE81B3 /* casefail.cpp */,
+				CC817EA42B96DF230064413A /* Map.h */,
+				CC817EA62B96F30A0064413A /* MapTest.cpp */,
 			);
 			path = hw4;
 			sourceTree = "<group>";
@@ -131,11 +133,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC817EA72B96F30A0064413A /* MapTest.cpp in Sources */,
 				CCA0A3592B8022D800FE81B3 /* badvector.cpp in Sources */,
 				CCA0A35B2B8023E500FE81B3 /* casefail.cpp in Sources */,
 				CCA0A3552B80184400FE81B3 /* oddvector.cpp in Sources */,
 				CCA0A3572B801D5600FE81B3 /* badlist.cpp in Sources */,
-				CCA0A34E2B80112D00FE81B3 /* oddlist.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
