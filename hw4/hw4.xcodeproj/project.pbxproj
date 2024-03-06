@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CC817EA72B96F30A0064413A /* MapTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC817EA62B96F30A0064413A /* MapTest.cpp */; };
 		CC817EA92B96FF100064413A /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC817EA82B96FF100064413A /* list.cpp */; };
+		CC817EAB2B97F2010064413A /* sorts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC817EAA2B97F2010064413A /* sorts.cpp */; };
 		CCA0A3552B80184400FE81B3 /* oddvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3542B80184400FE81B3 /* oddvector.cpp */; };
 		CCA0A3572B801D5600FE81B3 /* badlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3562B801D5600FE81B3 /* badlist.cpp */; };
 		CCA0A3592B8022D800FE81B3 /* badvector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCA0A3582B8022D800FE81B3 /* badvector.cpp */; };
@@ -31,6 +32,7 @@
 		CC817EA42B96DF230064413A /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
 		CC817EA62B96F30A0064413A /* MapTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MapTest.cpp; sourceTree = "<group>"; };
 		CC817EA82B96FF100064413A /* list.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = list.cpp; sourceTree = "<group>"; };
+		CC817EAA2B97F2010064413A /* sorts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sorts.cpp; sourceTree = "<group>"; };
 		CCA0A34A2B80112D00FE81B3 /* hw4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hw4; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCA0A3542B80184400FE81B3 /* oddvector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = oddvector.cpp; sourceTree = "<group>"; };
 		CCA0A3562B801D5600FE81B3 /* badlist.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = badlist.cpp; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				CCA0A3582B8022D800FE81B3 /* badvector.cpp */,
 				CCA0A35A2B8023E500FE81B3 /* casefail.cpp */,
 				CC817EA42B96DF230064413A /* Map.h */,
+				CC817EAA2B97F2010064413A /* sorts.cpp */,
 				CC817EA62B96F30A0064413A /* MapTest.cpp */,
 				CC817EA82B96FF100064413A /* list.cpp */,
 			);
@@ -139,6 +142,7 @@
 				CC817EA72B96F30A0064413A /* MapTest.cpp in Sources */,
 				CCA0A3592B8022D800FE81B3 /* badvector.cpp in Sources */,
 				CCA0A35B2B8023E500FE81B3 /* casefail.cpp in Sources */,
+				CC817EAB2B97F2010064413A /* sorts.cpp in Sources */,
 				CCA0A3552B80184400FE81B3 /* oddvector.cpp in Sources */,
 				CCA0A3572B801D5600FE81B3 /* badlist.cpp in Sources */,
 				CC817EA92B96FF100064413A /* list.cpp in Sources */,
