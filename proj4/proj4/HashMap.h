@@ -32,6 +32,7 @@ private:
     int m_items;
     
     unsigned int hash(const std::string& str) const {return std::hash<std::string>()(str) % m_buckets;}
+    
     void rehash();
     void cleanup();
 };
@@ -68,17 +69,14 @@ int HashMap<T>::size() const{
 
 template <class T>
 void HashMap<T>::insert(const std::string& key, const T& value){
-    unsigned int bucket = hash(key);
-    
     // check for duplicate
     if(find(key) != nullptr){
         *find(key) = value;
         return;
     }
-    
     rehash(); // check if adding new item will exceed max load
     Item newItem(key, value);
-    hashTable[bucket].push_back(newItem);
+    hashTable[hash(key)].push_back(newItem);
     m_items++;
 }
 
@@ -100,7 +98,6 @@ void HashMap<T>::rehash(){
     hashTable = newHashTable;
 }
 
-// Defines the bracket operator for HashMap, so you can use your map like this: your_map["david"] = 2.99; If the key does not exist in the hashmap, this will create a new entry in the hashmap and map it to the default value of type T (0 for builtin types). It returns a reference to the newly created value in the map.
 template <class T>
 T& HashMap<T>::operator[](const std::string& key){
     if(find(key) == nullptr)
@@ -111,7 +108,6 @@ T& HashMap<T>::operator[](const std::string& key){
 template <class T>
 const T* HashMap<T>::find(const std::string& key) const{
     unsigned int bucket = hash(key);
-    std::cout << bucket << std::endl;
     for(typename std::list<Item>::const_iterator it = hashTable[bucket].begin(); it != hashTable[bucket].end(); it++){
         if(it->key == key)
             return &it->value;
