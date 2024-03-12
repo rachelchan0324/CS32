@@ -10,7 +10,7 @@
 		CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCD52B9CEA26004F0A4A /* HashMap.h */; };
 		CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */; };
 		CCF5DCE32B9ECFDD004F0A4A /* GeoDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */; };
-		CCF5DCEA2B9F86B5004F0A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCE92B9F86B5004F0A4A /* main.cpp */; };
+		CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCF82B9F8BB4004F0A4A /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,13 +31,13 @@
 		CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HashMapTester.cpp; sourceTree = "<group>"; };
 		CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GeoDatabase.cpp; sourceTree = "<group>"; };
 		CCF5DCE22B9ECFDD004F0A4A /* GeoDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeoDatabase.h; sourceTree = "<group>"; };
-		CCF5DCE42B9F86AC004F0A4A /* base_classes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base_classes.h; sourceTree = "<group>"; };
-		CCF5DCE52B9F86B4004F0A4A /* stops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stops.h; sourceTree = "<group>"; };
-		CCF5DCE62B9F86B5004F0A4A /* geotools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geotools.h; sourceTree = "<group>"; };
-		CCF5DCE72B9F86B5004F0A4A /* tourcmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tourcmd.h; sourceTree = "<group>"; };
-		CCF5DCE82B9F86B5004F0A4A /* geopoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geopoint.h; sourceTree = "<group>"; };
-		CCF5DCE92B9F86B5004F0A4A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		CCF5DCEB2B9F882E004F0A4A /* mapdata.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapdata.txt; sourceTree = "<group>"; };
+		CCF5DCF32B9F8BB4004F0A4A /* tourcmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tourcmd.h; path = ../../../../Downloads/provided/tourcmd.h; sourceTree = "<group>"; };
+		CCF5DCF42B9F8BB4004F0A4A /* stops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stops.h; path = ../../../../Downloads/provided/stops.h; sourceTree = "<group>"; };
+		CCF5DCF52B9F8BB4004F0A4A /* geopoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geopoint.h; path = ../../../../Downloads/provided/geopoint.h; sourceTree = "<group>"; };
+		CCF5DCF62B9F8BB4004F0A4A /* geotools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geotools.h; path = ../../../../Downloads/provided/geotools.h; sourceTree = "<group>"; };
+		CCF5DCF72B9F8BB4004F0A4A /* base_classes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base_classes.h; path = ../../../../Downloads/provided/base_classes.h; sourceTree = "<group>"; };
+		CCF5DCF82B9F8BB4004F0A4A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../Downloads/provided/main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,13 +74,13 @@
 				CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */,
 				CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */,
 				CCF5DCE22B9ECFDD004F0A4A /* GeoDatabase.h */,
-				CCF5DCE42B9F86AC004F0A4A /* base_classes.h */,
-				CCF5DCE82B9F86B5004F0A4A /* geopoint.h */,
-				CCF5DCE62B9F86B5004F0A4A /* geotools.h */,
-				CCF5DCE92B9F86B5004F0A4A /* main.cpp */,
-				CCF5DCE52B9F86B4004F0A4A /* stops.h */,
-				CCF5DCE72B9F86B5004F0A4A /* tourcmd.h */,
 				CCF5DCEB2B9F882E004F0A4A /* mapdata.txt */,
+				CCF5DCF72B9F8BB4004F0A4A /* base_classes.h */,
+				CCF5DCF52B9F8BB4004F0A4A /* geopoint.h */,
+				CCF5DCF62B9F8BB4004F0A4A /* geotools.h */,
+				CCF5DCF82B9F8BB4004F0A4A /* main.cpp */,
+				CCF5DCF42B9F8BB4004F0A4A /* stops.h */,
+				CCF5DCF32B9F8BB4004F0A4A /* tourcmd.h */,
 			);
 			path = proj4;
 			sourceTree = "<group>";
@@ -144,7 +144,7 @@
 			files = (
 				CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */,
 				CCF5DCE32B9ECFDD004F0A4A /* GeoDatabase.cpp in Sources */,
-				CCF5DCEA2B9F86B5004F0A4A /* main.cpp in Sources */,
+				CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */,
 				CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

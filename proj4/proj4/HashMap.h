@@ -32,9 +32,7 @@ private:
     int m_items;
     
     unsigned int hash(const std::string& str) const {return std::hash<std::string>()(str) % m_buckets;}
-    
     void rehash();
-    void cleanup();
 };
 
 template <class T>
@@ -48,19 +46,7 @@ HashMap<T>::HashMap(double max_load){
 }
 
 template <class T>
-HashMap<T>::~HashMap(){
-    cleanup();
-}
-
-template <class T>
-void HashMap<T>::cleanup(){
-    for(typename std::vector<std::list<Item>>::iterator vectorIt = hashTable.begin(); vectorIt != hashTable.end(); ){
-        for(typename std::list<Item>::iterator listIt = vectorIt->begin(); listIt != vectorIt->end(); listIt++){
-            listIt = vectorIt->erase(listIt);
-        }
-        hashTable.erase(vectorIt);
-    }
-}
+HashMap<T>::~HashMap(){ }
 
 template <class T>
 int HashMap<T>::size() const{
@@ -94,7 +80,6 @@ void HashMap<T>::rehash(){
             newHashTable[hash(it->key)].splice(newHashTable[hash(it->key)].begin(), hashTable[i], it);
         }
     }
-    cleanup();
     hashTable = newHashTable;
 }
 
