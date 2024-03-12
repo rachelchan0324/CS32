@@ -1,3 +1,6 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
+
 #include <string>
 #include <list>
 #include <vector>
@@ -99,3 +102,5 @@ const T* HashMap<T>::find(const std::string& key) const{
     }
     return nullptr;
 }
+
+#endif
