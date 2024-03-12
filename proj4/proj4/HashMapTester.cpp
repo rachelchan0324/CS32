@@ -22,6 +22,7 @@ void foo() {
     cout << nameToGPA["Linda"] << endl; // prints zero
 }
 
+/*
 int main(){
     foo();
-}
+} */
