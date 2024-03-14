@@ -1,4 +1,4 @@
-#include "GeoDatabase.h"
+#include "geodb.h"
 #include "HashMap.h"
 #include "geopoint.h"
 #include "geotools.h"

@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CCACB6292BA33BCC009739A9 /* tour_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCACB6272BA33BCC009739A9 /* tour_generator.cpp */; };
 		CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCD52B9CEA26004F0A4A /* HashMap.h */; };
 		CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */; };
-		CCF5DCE32B9ECFDD004F0A4A /* GeoDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */; };
+		CCF5DCE32B9ECFDD004F0A4A /* geodb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */; };
 		CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCF82B9F8BB4004F0A4A /* main.cpp */; };
+		CCF5DCFC2BA25B05004F0A4A /* router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCFA2BA25B05004F0A4A /* router.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,11 +28,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CCACB6272BA33BCC009739A9 /* tour_generator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tour_generator.cpp; sourceTree = "<group>"; };
+		CCACB6282BA33BCC009739A9 /* tour_generator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tour_generator.h; sourceTree = "<group>"; };
 		CCF5DCD22B9CEA26004F0A4A /* proj4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proj4; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCF5DCD52B9CEA26004F0A4A /* HashMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashMap.h; sourceTree = "<group>"; };
 		CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HashMapTester.cpp; sourceTree = "<group>"; };
-		CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GeoDatabase.cpp; sourceTree = "<group>"; };
-		CCF5DCE22B9ECFDD004F0A4A /* GeoDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeoDatabase.h; sourceTree = "<group>"; };
+		CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geodb.cpp; sourceTree = "<group>"; };
+		CCF5DCE22B9ECFDD004F0A4A /* geodb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geodb.h; sourceTree = "<group>"; };
 		CCF5DCEB2B9F882E004F0A4A /* mapdata.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapdata.txt; sourceTree = "<group>"; };
 		CCF5DCF32B9F8BB4004F0A4A /* tourcmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tourcmd.h; path = ../../../../Downloads/provided/tourcmd.h; sourceTree = "<group>"; };
 		CCF5DCF42B9F8BB4004F0A4A /* stops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stops.h; path = ../../../../Downloads/provided/stops.h; sourceTree = "<group>"; };
@@ -38,6 +42,8 @@
 		CCF5DCF62B9F8BB4004F0A4A /* geotools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geotools.h; path = ../../../../Downloads/provided/geotools.h; sourceTree = "<group>"; };
 		CCF5DCF72B9F8BB4004F0A4A /* base_classes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base_classes.h; path = ../../../../Downloads/provided/base_classes.h; sourceTree = "<group>"; };
 		CCF5DCF82B9F8BB4004F0A4A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../Downloads/provided/main.cpp; sourceTree = "<group>"; };
+		CCF5DCFA2BA25B05004F0A4A /* router.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = router.cpp; sourceTree = "<group>"; };
+		CCF5DCFB2BA25B05004F0A4A /* router.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = router.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,8 +78,12 @@
 			children = (
 				CCF5DCD52B9CEA26004F0A4A /* HashMap.h */,
 				CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */,
-				CCF5DCE12B9ECFDD004F0A4A /* GeoDatabase.cpp */,
-				CCF5DCE22B9ECFDD004F0A4A /* GeoDatabase.h */,
+				CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */,
+				CCF5DCE22B9ECFDD004F0A4A /* geodb.h */,
+				CCF5DCFA2BA25B05004F0A4A /* router.cpp */,
+				CCF5DCFB2BA25B05004F0A4A /* router.h */,
+				CCACB6272BA33BCC009739A9 /* tour_generator.cpp */,
+				CCACB6282BA33BCC009739A9 /* tour_generator.h */,
 				CCF5DCEB2B9F882E004F0A4A /* mapdata.txt */,
 				CCF5DCF72B9F8BB4004F0A4A /* base_classes.h */,
 				CCF5DCF52B9F8BB4004F0A4A /* geopoint.h */,
@@ -143,9 +153,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */,
-				CCF5DCE32B9ECFDD004F0A4A /* GeoDatabase.cpp in Sources */,
+				CCF5DCE32B9ECFDD004F0A4A /* geodb.cpp in Sources */,
 				CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */,
+				CCF5DCFC2BA25B05004F0A4A /* router.cpp in Sources */,
 				CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */,
+				CCACB6292BA33BCC009739A9 /* tour_generator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
