@@ -28,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC3B85352BA39A2800EC224E /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		CCACB6272BA33BCC009739A9 /* tour_generator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tour_generator.cpp; sourceTree = "<group>"; };
 		CCACB6282BA33BCC009739A9 /* tour_generator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tour_generator.h; sourceTree = "<group>"; };
 		CCF5DCD22B9CEA26004F0A4A /* proj4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proj4; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +81,7 @@
 				CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */,
 				CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */,
 				CCF5DCE22B9ECFDD004F0A4A /* geodb.h */,
+				CC3B85352BA39A2800EC224E /* stops.txt */,
 				CCF5DCFA2BA25B05004F0A4A /* router.cpp */,
 				CCF5DCFB2BA25B05004F0A4A /* router.h */,
 				CCACB6272BA33BCC009739A9 /* tour_generator.cpp */,

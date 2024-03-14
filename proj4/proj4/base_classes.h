@@ -10,8 +10,7 @@
 #include "stops.h"
 #include "tourcmd.h"
 
-class GeoDatabaseBase
-{
+class GeoDatabaseBase {
 public:
     GeoDatabaseBase() {}
     virtual ~GeoDatabaseBase() {}
@@ -22,16 +21,14 @@ public:
      virtual std::string get_street_name(const GeoPoint& pt1, const GeoPoint& pt2) const = 0;
 };
 
-class RouterBase
-{
+class RouterBase {
 public:
     RouterBase() {}
     virtual ~RouterBase() {}
     virtual std::vector<GeoPoint> route(const GeoPoint& pt1, const GeoPoint& pt2) const = 0;
 };
 
-class TourGeneratorBase
-{
+class TourGeneratorBase {
 public:
     TourGeneratorBase() { }
     virtual ~TourGeneratorBase() {}
