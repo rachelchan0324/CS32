@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CCACB6292BA33BCC009739A9 /* tour_generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCACB6272BA33BCC009739A9 /* tour_generator.cpp */; };
-		CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCD52B9CEA26004F0A4A /* HashMap.h */; };
-		CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */; };
+		CCF5DCD62B9CEA26004F0A4A /* hashmap.h in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCD52B9CEA26004F0A4A /* hashmap.h */; };
 		CCF5DCE32B9ECFDD004F0A4A /* geodb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */; };
 		CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCF82B9F8BB4004F0A4A /* main.cpp */; };
 		CCF5DCFC2BA25B05004F0A4A /* router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF5DCFA2BA25B05004F0A4A /* router.cpp */; };
@@ -29,11 +28,11 @@
 
 /* Begin PBXFileReference section */
 		CC3B85352BA39A2800EC224E /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
+		CC3B85362BA3D97F00EC224E /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.txt; sourceTree = "<group>"; };
 		CCACB6272BA33BCC009739A9 /* tour_generator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tour_generator.cpp; sourceTree = "<group>"; };
 		CCACB6282BA33BCC009739A9 /* tour_generator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tour_generator.h; sourceTree = "<group>"; };
 		CCF5DCD22B9CEA26004F0A4A /* proj4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proj4; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCF5DCD52B9CEA26004F0A4A /* HashMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HashMap.h; sourceTree = "<group>"; };
-		CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HashMapTester.cpp; sourceTree = "<group>"; };
+		CCF5DCD52B9CEA26004F0A4A /* hashmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hashmap.h; sourceTree = "<group>"; };
 		CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = geodb.cpp; sourceTree = "<group>"; };
 		CCF5DCE22B9ECFDD004F0A4A /* geodb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geodb.h; sourceTree = "<group>"; };
 		CCF5DCEB2B9F882E004F0A4A /* mapdata.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapdata.txt; sourceTree = "<group>"; };
@@ -77,11 +76,11 @@
 		CCF5DCD42B9CEA26004F0A4A /* proj4 */ = {
 			isa = PBXGroup;
 			children = (
-				CCF5DCD52B9CEA26004F0A4A /* HashMap.h */,
-				CCF5DCDF2B9DAD20004F0A4A /* HashMapTester.cpp */,
+				CCF5DCD52B9CEA26004F0A4A /* hashmap.h */,
 				CCF5DCE12B9ECFDD004F0A4A /* geodb.cpp */,
 				CCF5DCE22B9ECFDD004F0A4A /* geodb.h */,
 				CC3B85352BA39A2800EC224E /* stops.txt */,
+				CC3B85362BA3D97F00EC224E /* sample.txt */,
 				CCF5DCFA2BA25B05004F0A4A /* router.cpp */,
 				CCF5DCFB2BA25B05004F0A4A /* router.h */,
 				CCACB6272BA33BCC009739A9 /* tour_generator.cpp */,
@@ -154,11 +153,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCF5DCD62B9CEA26004F0A4A /* HashMap.h in Sources */,
+				CCF5DCD62B9CEA26004F0A4A /* hashmap.h in Sources */,
 				CCF5DCE32B9ECFDD004F0A4A /* geodb.cpp in Sources */,
 				CCF5DCF92B9F8BB4004F0A4A /* main.cpp in Sources */,
 				CCF5DCFC2BA25B05004F0A4A /* router.cpp in Sources */,
-				CCF5DCE02B9DAD20004F0A4A /* HashMapTester.cpp in Sources */,
 				CCACB6292BA33BCC009739A9 /* tour_generator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

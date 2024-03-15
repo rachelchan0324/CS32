@@ -13,8 +13,8 @@ public:
 private:
     const GeoDatabaseBase& m_geoDatabase;
     const RouterBase& m_router;
-    std::string getLineDirection(double angle) const;
-    std::string getTurnDirection(double angle) const;
+    std::string getLineDirection(double angle) const; // get direction of the line based on angle
+    std::string getTurnDirection(double angle) const; // get direction of the turn based on angle
 };
 
 #endif
